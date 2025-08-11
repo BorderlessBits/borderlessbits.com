@@ -2,18 +2,18 @@ import { defineConfig, devices } from '@playwright/test';
 
 /**
  * Playwright Configuration for E2E Tests Only
- * 
+ *
  * This configuration ensures Playwright only runs E2E tests and is separated from Jest unit tests.
- * 
+ *
  * Directory Structure:
  * - Playwright E2E Tests: tests folder with spec.ts files (e2e, visual, performance directories)
  * - Jest Unit Tests: src folder with test.tsx/test.ts files (excluded from Playwright)
- * 
+ *
  * Test Commands:
  * - npm run test:e2e - Run Playwright E2E tests (Chromium only)
  * - npm run test:e2e:all - Run Playwright E2E tests (all browsers)
  * - npm run test:e2e:headed - Run Playwright E2E tests with browser UI
- * 
+ *
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
