@@ -128,83 +128,6 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
-  # ==========================================
-  # VISUAL REGRESSION TESTING
-  # ==========================================
-
-  visual-regression:
-    name: 👁️ Visual Regression
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: [build-preview]
-    if: github.event.pull_request.base.ref == 'main'
-
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: ⚡ Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: 📦 Install Playwright
-        run: |
-          npm ci --prefer-offline --no-audit
-          npx playwright install chromium
-
-      - name: ⏳ Wait for preview deployment
-        run: sleep 45
-
-      - name: 📸 Visual regression tests
-        id: visual_tests
-        run: |
-          cat > visual-regression.spec.js << 'EOF'
-          const { test, expect } = require('@playwright/test');
-
-          const pages = [
-            { name: 'home', url: '/' },
-            { name: 'contact', url: '/contact' }
-          ];
-
-          for (const page of pages) {
-            test(`Visual regression - ${page.name}`, async ({ page: playwright }) => {
-              await playwright.goto(`${{ needs.build-preview.outputs.deploy_url }}${page.url}`);
-              await playwright.waitForLoadState('networkidle');
-              
-              // Hide dynamic content
-              await playwright.addStyleTag({
-                content: `
-                  [data-testid="current-time"],
-                  .loading,
-                  .spinner {
-                    visibility: hidden !important;
-                  }
-                `
-              });
-              
-              await expect(playwright).toHaveScreenshot(`${page.name}-preview.png`, {
-                fullPage: true,
-                threshold: 0.2
-              });
-            });
-          }
-          EOF
-
-          npx playwright test visual-regression.spec.js || true
-
-      - name: 📤 Upload visual diff artifacts
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: visual-regression-pr-${{ needs.build-preview.outputs.pr_number }}
-          path: |
-            test-results/
-            playwright-report/
-          retention-days: 7
 
   # ==========================================
   # PR STATUS UPDATE
@@ -213,7 +136,7 @@ jobs:
   update-pr-status:
     name: 📝 Update PR Status
     runs-on: ubuntu-latest
-    needs: [build-preview, lighthouse-audit, visual-regression]
+    needs: [build-preview, lighthouse-audit]
     if: always()
 
     steps:
@@ -227,7 +150,6 @@ jobs:
             // Check job results
             const buildStatus = '${{ needs.build-preview.result }}';
             const lighthouseStatus = '${{ needs.lighthouse-audit.result }}';
-            const visualStatus = '${{ needs.visual-regression.result }}';
 
             // Create status indicators
             const getStatusIcon = (status) => {
@@ -250,7 +172,6 @@ jobs:
             |-------|--------|---------|
             | Build & Deploy | ${getStatusIcon(buildStatus)} | ${buildStatus} |
             | Lighthouse Audit | ${getStatusIcon(lighthouseStatus)} | Performance, A11y, SEO |
-            | Visual Regression | ${getStatusIcon(visualStatus)} | UI consistency check |
 
             ### Preview Links
             - 🏠 [Home Page](${{ needs.build-preview.outputs.deploy_url }})

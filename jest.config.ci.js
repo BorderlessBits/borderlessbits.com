@@ -9,7 +9,7 @@ const createJestConfig = nextJest({
  * CI-Specific Jest Configuration
  * 
  * This configuration is designed specifically for GitHub Actions CI environment
- * to completely prevent Jest from discovering or interacting with Playwright tests.
+ * for unit testing only.
  * 
  * Features:
  * - Ultra-aggressive exclusion patterns
@@ -30,29 +30,17 @@ const ciJestConfig = {
     '<rootDir>/src/**/?(*.)+(test).{js,jsx,ts,tsx}',
   ],
   
-  // ULTRA-AGGRESSIVE EXCLUSION
+  // EXCLUSION PATTERNS
   testPathIgnorePatterns: [
     '<rootDir>/.next/',
     '<rootDir>/node_modules/',
     '<rootDir>/out/',
-    '<rootDir>/tests/',
-    '<rootDir>/playwright.config.ts',
-    '<rootDir>/playwright-report/',
-    '<rootDir>/test-results/',
     '\\.spec\\.',
-    'tests/',
-    '/tests/',
   ],
   
   // MODULE EXCLUSION
   modulePathIgnorePatterns: [
-    '<rootDir>/tests/',
-    '<rootDir>/playwright.config.ts',
-    '<rootDir>/playwright-report/',
-    '<rootDir>/test-results/',
     '\\.spec\\.',
-    'tests/',
-    '/tests/',
   ],
   
   // MODULE NAME MAPPING
@@ -64,9 +52,6 @@ const ciJestConfig = {
   transformIgnorePatterns: [
     '/node_modules/(?!(.*\\.mjs$))',
     '^.+\\.module\\.(css|sass|scss)$',
-    '<rootDir>/tests/',
-    'tests/',
-    '/tests/',
   ],
   
   // Coverage - only src/
@@ -81,10 +66,7 @@ const ciJestConfig = {
   coverageReporters: ['text', 'lcov', 'html'],
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: [
-    '<rootDir>/tests/',
     '\\.spec\\.',
-    'tests/',
-    '/tests/',
   ],
   
   // CI-optimized settings

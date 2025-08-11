@@ -94,7 +94,6 @@ docker-compose --profile production up
 - ✅ **Multi-Environment**: Production, staging, preview deployments
 - ✅ **Automated Rollback**: Health check failures trigger rollback
 - ✅ **Performance Monitoring**: Lighthouse CI integration
-- ✅ **Visual Regression**: Playwright screenshot testing
 
 ## 🚦 Development Workflow
 
@@ -177,16 +176,11 @@ npm run lighthouse:ci # Lighthouse CI validation
 │   ├── lib/             # Utilities and libraries
 │   ├── styles/          # Global styles
 │   └── types/           # TypeScript definitions
-├── tests/               # Test files
-│   ├── e2e/            # End-to-end tests (Playwright)
-│   ├── performance/    # Performance tests
-│   ├── visual/         # Visual regression tests
-│   └── unit/           # Unit tests (Jest)
+├── src/                   # Source code
 ├── content/            # Markdown content
 ├── public/             # Static assets
 ├── docker/             # Docker configurations
 ├── next.config.js      # Next.js configuration
-├── playwright.config.ts # E2E test configuration
 ├── lighthouserc.json   # Lighthouse CI configuration
 └── package.json        # Dependencies and scripts
 ```
@@ -327,27 +321,21 @@ Required GitHub Secrets:
 ### Test Types
 
 - **Unit Tests**: Jest with React Testing Library
-- **E2E Tests**: Playwright across Chrome, Firefox, Safari
 - **Performance Tests**: Lighthouse CI validation
-- **Visual Regression**: Screenshot comparison testing
 - **Security Tests**: OWASP ZAP baseline scans
 
 ### Test Commands
 
 ```bash
 npm run test              # Unit tests
-npm run test:e2e          # End-to-end tests
 npm run test:performance  # Performance tests
-npm run test:visual       # Visual regression tests
 npm run test:security     # Security tests
 ```
 
 ### Test Coverage
 
 - **Target Coverage**: >80% for unit tests
-- **E2E Coverage**: Critical user journeys
 - **Performance Coverage**: All major pages
-- **Visual Coverage**: Key UI components
 
 ## 📚 Documentation
 

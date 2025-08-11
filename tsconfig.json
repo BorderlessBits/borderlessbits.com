@@ -40,5 +40,5 @@
     "**/*.test.tsx",
     "**/*.spec.ts"
   ],
-  "exclude": ["node_modules", ".next", "out", "playwright.config.ts"]
+  "exclude": ["node_modules", ".next", "out"]
 }

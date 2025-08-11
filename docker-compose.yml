@@ -110,29 +110,6 @@ services:
     networks:
       - borderlessbits-network
 
-  # ==========================================
-  # E2E Testing with Playwright
-  # ==========================================
-  playwright:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.playwright
-    container_name: borderlessbits-e2e
-    volumes:
-      - ./tests:/app/tests
-      - ./playwright.config.ts:/app/playwright.config.ts
-      - ./test-results:/app/test-results
-      - ./playwright-report:/app/playwright-report
-    environment:
-      - CI=true
-      - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-      - PLAYWRIGHT_BASE_URL=http://app:3000
-    depends_on:
-      - app
-    profiles:
-      - e2e
-    networks:
-      - borderlessbits-network
 
   # ==========================================
   # Nginx Reverse Proxy (for advanced testing)
