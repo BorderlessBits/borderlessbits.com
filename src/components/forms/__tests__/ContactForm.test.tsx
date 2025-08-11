@@ -44,17 +44,16 @@ jest.mock('@/lib/store', () => ({
 // Get mock instances for easier testing
 const mockValidation = require('@/lib/validation');
 const mockEmailjs = require('@/lib/emailjs');
-const mockAnalytics = require('@/lib/analytics');
 
 describe('ContactForm', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Reset store state to default
     mockStoreImplementation.isSubmitting = false;
     mockStoreImplementation.submitStatus = 'idle';
     mockStoreImplementation.errorMessage = null;
-    
+
     // Reset validation mock to return no errors
     mockValidation.validateContactForm.mockReturnValue({});
   });
@@ -127,10 +126,13 @@ describe('ContactForm', () => {
     const submitButton = screen.getByRole('button', { name: /send message/i });
     fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      expect(mockEmailjs.submitContactForm).toHaveBeenCalled();
-      expect(mockStoreImplementation.setStatus).toHaveBeenCalledWith('submitting');
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(mockEmailjs.submitContactForm).toHaveBeenCalled();
+        expect(mockStoreImplementation.setStatus).toHaveBeenCalledWith('submitting');
+      },
+      { timeout: 3000 }
+    );
   });
 
   it('resets form when reset button is clicked', () => {
