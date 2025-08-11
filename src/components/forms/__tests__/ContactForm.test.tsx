@@ -31,8 +31,8 @@ jest.mock('@/lib/analytics', () => ({
 // Store mock with state that can be modified
 const mockStoreImplementation = {
   isSubmitting: false,
-  submitStatus: 'idle',
-  errorMessage: null,
+  submitStatus: 'idle' as 'idle' | 'submitting' | 'success' | 'error',
+  errorMessage: null as string | null,
   setStatus: jest.fn(),
   resetForm: jest.fn(),
 };
@@ -155,7 +155,7 @@ describe('ContactForm', () => {
   it('displays success message after successful submission', async () => {
     // Update mock store state to success
     mockStoreImplementation.submitStatus = 'success';
-    mockStoreImplementation.errorMessage = 'Thank you! Your message has been sent successfully.';
+    mockStoreImplementation.errorMessage = 'Thank you! Your message has been sent successfully.' as string;
 
     render(<ContactForm />);
 
@@ -167,7 +167,7 @@ describe('ContactForm', () => {
   it('displays error message after failed submission', async () => {
     // Update mock store state to error
     mockStoreImplementation.submitStatus = 'error';
-    mockStoreImplementation.errorMessage = 'An error occurred. Please try again.';
+    mockStoreImplementation.errorMessage = 'An error occurred. Please try again.' as string;
 
     render(<ContactForm />);
 

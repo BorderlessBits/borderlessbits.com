@@ -305,14 +305,16 @@ test.describe('Visual Regression Tests', () => {
     }
 
     // Test multiple tab stops
+    let tabCount = 0;
     for (let i = 0; i < 3; i++) {
       await page.keyboard.press('Tab');
       await page.waitForTimeout(200);
+      tabCount++;
     }
 
     const currentFocused = page.locator(':focus').first();
     if ((await currentFocused.count()) > 0) {
-      await expect(currentFocused).toHaveScreenshot(`focus-state-${i + 2}.png`, {
+      await expect(currentFocused).toHaveScreenshot(`focus-state-${tabCount + 2}.png`, {
         threshold: 0.1,
       });
     }

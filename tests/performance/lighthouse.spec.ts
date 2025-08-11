@@ -10,6 +10,7 @@ test.describe('Lighthouse Performance Tests', () => {
 
     await playAudit({
       page,
+      port: 9222,
       reports: {
         formats: {
           json: true,
@@ -35,6 +36,7 @@ test.describe('Lighthouse Performance Tests', () => {
 
     await playAudit({
       page,
+      port: 9222,
       reports: {
         formats: {
           json: true,
