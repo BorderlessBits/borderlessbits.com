@@ -19,8 +19,7 @@ const RETRY_CONFIG = {
 /**
  * Sleep helper for retry logic
  */
-const sleep = (ms: number): Promise<void> => 
-  new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * Calculate exponential backoff delay
@@ -34,11 +33,7 @@ const getRetryDelay = (attempt: number): number => {
  * Validates EmailJS configuration
  */
 export function validateEmailJSConfig(): boolean {
-  return !!(
-    EMAILJS_CONFIG.serviceId &&
-    EMAILJS_CONFIG.templateId &&
-    EMAILJS_CONFIG.publicKey
-  );
+  return !!(EMAILJS_CONFIG.serviceId && EMAILJS_CONFIG.templateId && EMAILJS_CONFIG.publicKey);
 }
 
 /**
@@ -77,7 +72,7 @@ export async function sendContactEmail(
       project_type: formatProjectType(sanitizedData.project_type),
       project_timeline: formatProjectTimeline(sanitizedData.project_timeline),
       message: sanitizedData.message,
-      budget_range: sanitizedData.budget_range 
+      budget_range: sanitizedData.budget_range
         ? formatBudgetRange(sanitizedData.budget_range)
         : 'Not provided',
       referral_source: sanitizedData.referral_source
@@ -116,7 +111,6 @@ export async function sendContactEmail(
       message: 'Email sent successfully',
       timestamp: Date.now(),
     };
-
   } catch (error: any) {
     console.error(`EmailJS attempt ${retryAttempt} failed:`, error);
 
@@ -124,7 +118,7 @@ export async function sendContactEmail(
     if (retryAttempt < RETRY_CONFIG.maxAttempts) {
       const delay = getRetryDelay(retryAttempt);
       console.log(`Retrying in ${delay}ms...`);
-      
+
       await sleep(delay);
       return sendContactEmail(formData, retryAttempt + 1);
     }
@@ -144,7 +138,7 @@ export async function sendContactEmail(
  */
 async function sendAutoReply(formData: ContactFormData): Promise<void> {
   const autoReplyTemplateId = process.env.NEXT_PUBLIC_EMAILJS_AUTOREPLY_TEMPLATE_ID;
-  
+
   if (!autoReplyTemplateId) {
     console.log('Auto-reply template not configured, skipping...');
     return;
@@ -173,9 +167,7 @@ async function sendAutoReply(formData: ContactFormData): Promise<void> {
 /**
  * Submits form via Netlify Forms (primary method)
  */
-export async function submitNetlifyForm(
-  formData: ContactFormData
-): Promise<EmailSubmissionResult> {
+export async function submitNetlifyForm(formData: ContactFormData): Promise<EmailSubmissionResult> {
   // const startTime = Date.now(); // For future performance tracking
 
   try {
@@ -228,7 +220,6 @@ export async function submitNetlifyForm(
     } else {
       throw new Error(`Netlify Forms error: ${response.status} ${response.statusText}`);
     }
-
   } catch (error: any) {
     console.error('Netlify Forms submission failed:', error);
     return {
@@ -243,9 +234,7 @@ export async function submitNetlifyForm(
 /**
  * Dual submission strategy: Netlify Forms (primary) + EmailJS (fallback)
  */
-export async function submitContactForm(
-  formData: ContactFormData
-): Promise<EmailSubmissionResult> {
+export async function submitContactForm(formData: ContactFormData): Promise<EmailSubmissionResult> {
   console.log('Starting dual form submission...');
 
   // Try Netlify Forms first (if on Netlify-hosted site)
@@ -259,7 +248,7 @@ export async function submitContactForm(
 
   // Fallback to EmailJS
   const emailjsResult = await sendContactEmail(formData);
-  
+
   // If both methods fail, provide a helpful error message
   if (!emailjsResult.success) {
     return {
@@ -346,7 +335,7 @@ export async function testEmailJSConnection(): Promise<boolean> {
 
     // Initialize EmailJS
     emailjs.init(EMAILJS_CONFIG.publicKey);
-    
+
     // Test with minimal template parameters
     const result = await emailjs.send(
       EMAILJS_CONFIG.serviceId,

@@ -12,7 +12,7 @@ export const useUIStore = create<UIStore>()(
       // Mobile navigation state
       mobileMenuOpen: false,
       toggleMobileMenu: () => {
-        set((state) => ({ mobileMenuOpen: !state.mobileMenuOpen }));
+        set(state => ({ mobileMenuOpen: !state.mobileMenuOpen }));
       },
       closeMobileMenu: () => {
         set({ mobileMenuOpen: false });
@@ -22,7 +22,7 @@ export const useUIStore = create<UIStore>()(
       cookieConsent: null,
       setCookieConsent: (consent: boolean) => {
         set({ cookieConsent: consent });
-        
+
         // Store detailed consent in localStorage
         if (typeof window !== 'undefined') {
           const consentData: PrivacyConsent = {
@@ -38,7 +38,7 @@ export const useUIStore = create<UIStore>()(
       theme: 'light',
       setTheme: (theme: 'light' | 'dark') => {
         set({ theme });
-        
+
         // Apply theme to document
         if (typeof window !== 'undefined') {
           document.documentElement.setAttribute('data-theme', theme);
@@ -48,7 +48,7 @@ export const useUIStore = create<UIStore>()(
     {
       name: 'ui-storage',
       // Only persist certain fields
-      partialize: (state) => ({
+      partialize: state => ({
         cookieConsent: state.cookieConsent,
         theme: state.theme,
       }),
@@ -68,23 +68,23 @@ interface FormStore {
   resetForm: () => void;
 }
 
-export const useFormStore = create<FormStore>((set) => ({
+export const useFormStore = create<FormStore>(set => ({
   isSubmitting: false,
   submitStatus: 'idle',
   errorMessage: null,
-  
+
   setSubmitting: (submitting: boolean) => {
     set({ isSubmitting: submitting });
   },
-  
+
   setStatus: (status: 'idle' | 'submitting' | 'success' | 'error', message?: string) => {
-    set({ 
+    set({
       submitStatus: status,
       errorMessage: message || null,
       isSubmitting: status === 'submitting',
     });
   },
-  
+
   resetForm: () => {
     set({
       isSubmitting: false,
@@ -115,24 +115,24 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
       sessionStart: Date.now(),
       conversionTracked: false,
       performanceMetrics: {},
-      
+
       incrementPageViews: () => {
-        set((state) => ({ pageViews: state.pageViews + 1 }));
+        set(state => ({ pageViews: state.pageViews + 1 }));
       },
-      
+
       trackConversion: () => {
         set({ conversionTracked: true });
       },
-      
+
       setMetric: (key: string, value: number) => {
-        set((state) => ({
+        set(state => ({
           performanceMetrics: {
             ...state.performanceMetrics,
             [key]: value,
           },
         }));
       },
-      
+
       getSessionDuration: () => {
         const { sessionStart } = _get();
         return Date.now() - sessionStart;
@@ -141,7 +141,7 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
     {
       name: 'analytics-storage',
       // Only persist certain analytics data
-      partialize: (state) => ({
+      partialize: state => ({
         pageViews: state.pageViews,
         sessionStart: state.sessionStart,
         conversionTracked: state.conversionTracked,
@@ -175,30 +175,30 @@ export const useContentStore = create<ContentStore>()(
       searchResults: null,
       isSearching: false,
       recentSearches: [],
-      
+
       setSearchQuery: (query: string) => {
         set({ searchQuery: query });
       },
-      
+
       setSearchResults: (results: any) => {
         set({ searchResults: results, isSearching: false });
       },
-      
+
       setSearching: (searching: boolean) => {
         set({ isSearching: searching });
       },
-      
+
       addRecentSearch: (query: string) => {
         if (!query.trim()) return;
-        
-        set((state) => {
+
+        set(state => {
           const filtered = state.recentSearches.filter(s => s !== query);
           return {
             recentSearches: [query, ...filtered].slice(0, 5), // Keep last 5 searches
           };
         });
       },
-      
+
       clearSearchResults: () => {
         set({
           searchQuery: '',
@@ -209,7 +209,7 @@ export const useContentStore = create<ContentStore>()(
     }),
     {
       name: 'content-storage',
-      partialize: (state) => ({
+      partialize: state => ({
         recentSearches: state.recentSearches,
       }),
     }
@@ -240,9 +240,9 @@ export const usePerformanceStore = create<PerformanceStore>()(
   persist(
     (set, _get) => ({
       metrics: {},
-      
+
       addMetric: (path: string, metric: string, value: number) => {
-        set((state) => ({
+        set(state => ({
           metrics: {
             ...state.metrics,
             [path]: {
@@ -253,17 +253,17 @@ export const usePerformanceStore = create<PerformanceStore>()(
           },
         }));
       },
-      
+
       getAverageMetric: (metric: string) => {
         const { metrics } = _get();
         const values = Object.values(metrics)
           .map(m => m[metric as keyof typeof m])
           .filter(v => typeof v === 'number' && v > 0);
-        
+
         if (values.length === 0) return 0;
         return values.reduce((sum, val) => sum + val, 0) / values.length;
       },
-      
+
       getPageMetrics: (path: string) => {
         const { metrics } = _get();
         return metrics[path] || null;
@@ -272,12 +272,12 @@ export const usePerformanceStore = create<PerformanceStore>()(
     {
       name: 'performance-storage',
       // Clean old metrics (keep only last 100 entries)
-      partialize: (state) => {
+      partialize: state => {
         const entries = Object.entries(state.metrics);
         const sortedEntries = entries
-          .sort(([,a], [,b]) => b.timestamp - a.timestamp)
+          .sort(([, a], [, b]) => b.timestamp - a.timestamp)
           .slice(0, 100);
-        
+
         return {
           metrics: Object.fromEntries(sortedEntries),
         };
@@ -293,10 +293,8 @@ export const usePerformanceStore = create<PerformanceStore>()(
 // Hook for managing loading states
 export function useLoadingState(initialState: boolean = false) {
   const [loading, setLoading] = useState(initialState);
-  
-  const withLoading = useCallback(async <T>(
-    asyncFn: () => Promise<T>
-  ): Promise<T> => {
+
+  const withLoading = useCallback(async <T>(asyncFn: () => Promise<T>): Promise<T> => {
     setLoading(true);
     try {
       const result = await asyncFn();
@@ -305,31 +303,34 @@ export function useLoadingState(initialState: boolean = false) {
       setLoading(false);
     }
   }, []);
-  
+
   return { loading, setLoading, withLoading };
 }
 
 // Hook for managing error states
 export function useErrorState() {
   const [error, setError] = useState<string | null>(null);
-  
+
   const clearError = useCallback(() => setError(null), []);
-  
-  const withErrorHandling = useCallback(async <T>(
-    asyncFn: () => Promise<T>,
-    errorMessage: string = 'An error occurred'
-  ): Promise<T | null> => {
-    try {
-      clearError();
-      const result = await asyncFn();
-      return result;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : errorMessage;
-      setError(message);
-      return null;
-    }
-  }, [clearError]);
-  
+
+  const withErrorHandling = useCallback(
+    async <T>(
+      asyncFn: () => Promise<T>,
+      errorMessage: string = 'An error occurred'
+    ): Promise<T | null> => {
+      try {
+        clearError();
+        const result = await asyncFn();
+        return result;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : errorMessage;
+        setError(message);
+        return null;
+      }
+    },
+    [clearError]
+  );
+
   return { error, setError, clearError, withErrorHandling };
 }
 
@@ -337,14 +338,14 @@ export function useErrorState() {
 export function useAsync<T>() {
   const { loading, withLoading } = useLoadingState();
   const { error, withErrorHandling } = useErrorState();
-  
-  const execute = useCallback(async (
-    asyncFn: () => Promise<T>,
-    errorMessage?: string
-  ): Promise<T | null> => {
-    return withLoading(() => withErrorHandling(asyncFn, errorMessage));
-  }, [withLoading, withErrorHandling]);
-  
+
+  const execute = useCallback(
+    async (asyncFn: () => Promise<T>, errorMessage?: string): Promise<T | null> => {
+      return withLoading(() => withErrorHandling(asyncFn, errorMessage));
+    },
+    [withLoading, withErrorHandling]
+  );
+
   return { loading, error, execute };
 }
 

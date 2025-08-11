@@ -1,31 +1,36 @@
 ---
-title: "Enterprise Cloud Migration Success"
-description: "Complete cloud migration for a Fortune 500 company, achieving 99.9% uptime and 40% cost reduction."
-date: "2025-08-11"
-author: "Richard Mosley"
-tags: ["cloud-migration", "aws", "enterprise", "success-story"]
+title: 'Enterprise Cloud Migration Success'
+description:
+  'Complete cloud migration for a Fortune 500 company, achieving 99.9% uptime
+  and 40% cost reduction.'
+date: '2025-08-11'
+author: 'Richard Mosley'
+tags: ['cloud-migration', 'aws', 'enterprise', 'success-story']
 featured: true
-client: "Fortune 500 Technology Company"
-industry: "Technology"
-challenge: "Legacy infrastructure limiting scalability and increasing costs"
-solution: "Comprehensive cloud migration to AWS with microservices architecture"
-timeline: "6 months"
-technologies: ["AWS", "Docker", "Kubernetes", "Terraform", "PostgreSQL"]
+client: 'Fortune 500 Technology Company'
+industry: 'Technology'
+challenge: 'Legacy infrastructure limiting scalability and increasing costs'
+solution: 'Comprehensive cloud migration to AWS with microservices architecture'
+timeline: '6 months'
+technologies: ['AWS', 'Docker', 'Kubernetes', 'Terraform', 'PostgreSQL']
 results:
-  - metric: "Uptime Improvement"
-    value: "99.9%"
-  - metric: "Cost Reduction" 
-    value: "40%"
-  - metric: "Deployment Speed"
-    value: "10x faster"
+  - metric: 'Uptime Improvement'
+    value: '99.9%'
+  - metric: 'Cost Reduction'
+    value: '40%'
+  - metric: 'Deployment Speed'
+    value: '10x faster'
 seo:
-  meta_title: "Enterprise Cloud Migration Case Study - BorderlessBits"
-  meta_description: "Learn how we helped a Fortune 500 company achieve 99.9% uptime and 40% cost reduction through strategic cloud migration."
+  meta_title: 'Enterprise Cloud Migration Case Study - BorderlessBits'
+  meta_description:
+    'Learn how we helped a Fortune 500 company achieve 99.9% uptime and 40% cost
+    reduction through strategic cloud migration.'
 ---
 
 # Enterprise Cloud Migration Success Story
 
-Our client, a Fortune 500 technology company, was struggling with legacy infrastructure that limited their ability to scale and innovate.
+Our client, a Fortune 500 technology company, was struggling with legacy
+infrastructure that limited their ability to scale and innovate.
 
 ## The Challenge
 
@@ -60,4 +65,5 @@ The migration delivered exceptional results:
 - **Database**: Managed PostgreSQL with automated backups
 - **Monitoring**: CloudWatch with custom dashboards
 
-This project demonstrates our expertise in large-scale cloud migrations and our commitment to delivering measurable business value.
+This project demonstrates our expertise in large-scale cloud migrations and our
+commitment to delivering measurable business value.

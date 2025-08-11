@@ -1,16 +1,19 @@
 # Deployment Guide
 
-Comprehensive deployment guide for BorderlessBits.com with enterprise-grade CI/CD pipeline and zero-cost hosting strategy.
+Comprehensive deployment guide for BorderlessBits.com with enterprise-grade
+CI/CD pipeline and zero-cost hosting strategy.
 
 ## Quick Start
 
 ### Prerequisites
+
 - Node.js 18+ installed
 - Git configured
 - GitHub account with repository access
 - Required third-party service accounts (see [Service Setup](#service-setup))
 
 ### Initial Setup
+
 ```bash
 # Clone repository
 git clone https://github.com/yourusername/borderlessbits.com.git
@@ -41,11 +44,12 @@ npm run preview
    - Copy Measurement ID (format: `G-XXXXXXXXXX`)
 
 2. **Configure Privacy Settings**:
+
    ```javascript
    gtag('config', 'G-XXXXXXXXXX', {
      anonymize_ip: true,
      allow_ad_personalization_signals: false,
-     allow_google_signals: false
+     allow_google_signals: false,
    });
    ```
 
@@ -61,34 +65,19 @@ npm run preview
 2. **Email Templates**:
 
 **Contact Form Template**:
+
 ```html
-Subject: New Contact - {{project_type}}
-
-From: {{from_name}} <{{from_email}}>
-Company: {{company}}
-Project: {{project_type}}
-Timeline: {{project_timeline}}
-Budget: {{budget_range}}
-
-Message:
-{{message}}
-
----
-Submitted: {{submission_date}}
+Subject: New Contact - {{project_type}} From: {{from_name}} <{{from_email}}>
+Company: {{company}} Project: {{project_type}} Timeline: {{project_timeline}}
+Budget: {{budget_range}} Message: {{message}} --- Submitted: {{submission_date}}
 ```
 
 **Auto-Reply Template**:
+
 ```html
-Subject: Thank you for contacting BorderlessBits
-
-Hi {{to_name}},
-
-Thank you for your interest in our {{project_type}} services. 
-We'll respond within 24 hours.
-
-Best regards,
-Richard Mosley
-BorderlessBits
+Subject: Thank you for contacting BorderlessBits Hi {{to_name}}, Thank you for
+your interest in our {{project_type}} services. We'll respond within 24 hours.
+Best regards, Richard Mosley BorderlessBits
 ```
 
 3. **Add to GitHub Secrets**:
@@ -102,10 +91,11 @@ BorderlessBits
 
 2. **Create Sites**:
    - **Production**: `borderlessbits-prod`
-   - **Staging**: `borderlessbits-staging` 
+   - **Staging**: `borderlessbits-staging`
    - **Preview**: `borderlessbits-preview`
 
 3. **Configure Build Settings**:
+
    ```yaml
    Build command: npm run build
    Publish directory: out
@@ -134,6 +124,7 @@ BorderlessBits
    - Enforce HTTPS: ✅
 
 2. **DNS Configuration**:
+
    ```dns
    # A Records (GitHub Pages IPs)
    A    borderlessbits.com    185.199.108.153
@@ -150,6 +141,7 @@ BorderlessBits
 ### 5. Uptime Monitoring
 
 1. **Uptime Robot Setup**:
+
    ```bash
    # Automated setup
    ./scripts/monitoring/uptime-robot-setup.sh -k $UPTIME_ROBOT_API_KEY
@@ -170,12 +162,11 @@ BorderlessBits
 
 ### Production Environment
 
-**Domain**: https://borderlessbits.com
-**Hosting**: GitHub Pages (primary), Netlify (backup)
-**Branch**: `main`
-**Deployment**: Automatic on push to main
+**Domain**: https://borderlessbits.com **Hosting**: GitHub Pages (primary),
+Netlify (backup) **Branch**: `main` **Deployment**: Automatic on push to main
 
 **Configuration**:
+
 ```yaml
 NODE_ENV: production
 NEXT_PUBLIC_SITE_URL: https://borderlessbits.com
@@ -183,6 +174,7 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID: G-XXXXXXXXXX
 ```
 
 **Features**:
+
 - Custom domain with SSL
 - CDN optimization
 - Form processing with EmailJS
@@ -192,12 +184,11 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID: G-XXXXXXXXXX
 
 ### Staging Environment
 
-**Domain**: https://staging.borderlessbits.com
-**Hosting**: Netlify
-**Branch**: `develop`
-**Deployment**: Automatic on push to develop
+**Domain**: https://staging.borderlessbits.com **Hosting**: Netlify **Branch**:
+`develop` **Deployment**: Automatic on push to develop
 
 **Configuration**:
+
 ```yaml
 NODE_ENV: development
 NEXT_PUBLIC_SITE_URL: https://staging.borderlessbits.com
@@ -205,6 +196,7 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID: G-STAGING-ID
 ```
 
 **Features**:
+
 - Production-like testing
 - Auto-promotion to production
 - Separate analytics tracking
@@ -212,12 +204,12 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID: G-STAGING-ID
 
 ### Preview Environment
 
-**Domain**: https://preview-pr-{number}.netlify.app
-**Hosting**: Netlify
-**Branch**: Any feature branch in PR
-**Deployment**: Automatic on PR creation/update
+**Domain**: https://preview-pr-{number}.netlify.app **Hosting**: Netlify
+**Branch**: Any feature branch in PR **Deployment**: Automatic on PR
+creation/update
 
 **Features**:
+
 - Per-PR preview deployments
 - Lighthouse performance audits
 - Visual regression testing
@@ -252,6 +244,7 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID: G-STAGING-ID
 ### GitHub Actions Deployment
 
 **Production Deployment**:
+
 ```bash
 # Automatic trigger
 git push origin main
@@ -261,6 +254,7 @@ gh workflow run deploy-production.yml
 ```
 
 **Staging Deployment**:
+
 ```bash
 # Automatic trigger
 git push origin develop
@@ -271,6 +265,7 @@ git push origin develop
 ```
 
 **Preview Deployment**:
+
 ```bash
 # Automatic on PR creation
 git checkout -b feature/new-feature
@@ -300,11 +295,13 @@ docker-compose --profile production up
 ### Automatic Rollback
 
 **Triggers**:
+
 - Post-deployment health checks fail
-- Performance thresholds breached  
+- Performance thresholds breached
 - Critical security vulnerabilities detected
 
 **Process**:
+
 1. Failure detection
 2. Previous deployment identification
 3. Artifact restoration
@@ -334,6 +331,7 @@ docker-compose --profile production up
 ```
 
 **Backup Management**:
+
 - Automatic backups before each deployment
 - 30-day retention policy
 - Versioned artifacts with metadata
@@ -359,19 +357,18 @@ export EMAILJS_SERVICE_ID="service_xxxxx"
 ./scripts/setup-secrets.sh -t $GITHUB_TOKEN -r username/repo
 ```
 
-**Required Secrets**:
-| Secret | Purpose | Example |
-|--------|---------|---------|
-| `GA_MEASUREMENT_ID` | Google Analytics tracking | `G-XXXXXXXXXX` |
-| `EMAILJS_SERVICE_ID` | Email service configuration | `service_xxxxxxx` |
-| `EMAILJS_TEMPLATE_ID` | Email template ID | `template_xxxxxxx` |
-| `EMAILJS_PUBLIC_KEY` | EmailJS public key | `xxxxxxxxxx` |
-| `NETLIFY_AUTH_TOKEN` | Netlify deployment | `nfp_xxxxxxxxxx` |
-| `NETLIFY_SITE_ID` | Production site ID | `xxxxxxxx-xxxx-xxxx` |
+**Required Secrets**: | Secret | Purpose | Example |
+|--------|---------|---------| | `GA_MEASUREMENT_ID` | Google Analytics tracking
+| `G-XXXXXXXXXX` | | `EMAILJS_SERVICE_ID` | Email service configuration |
+`service_xxxxxxx` | | `EMAILJS_TEMPLATE_ID` | Email template ID |
+`template_xxxxxxx` | | `EMAILJS_PUBLIC_KEY` | EmailJS public key | `xxxxxxxxxx`
+| | `NETLIFY_AUTH_TOKEN` | Netlify deployment | `nfp_xxxxxxxxxx` | |
+`NETLIFY_SITE_ID` | Production site ID | `xxxxxxxx-xxxx-xxxx` |
 
 ### Security Scanning
 
 **Automated Scans**:
+
 - Daily security audits (2 AM UTC)
 - Dependency vulnerability scanning
 - Container security scanning
@@ -379,6 +376,7 @@ export EMAILJS_SERVICE_ID="service_xxxxx"
 - Infrastructure configuration scanning
 
 **Manual Security Checks**:
+
 ```bash
 # Run security audit
 npm audit --audit-level moderate
@@ -411,6 +409,7 @@ npm run lighthouse:desktop
 ### Performance Budgets
 
 **Thresholds**:
+
 - **Bundle Size**: <2MB total JavaScript
 - **Performance Score**: >80 (Lighthouse)
 - **Accessibility Score**: >95 (Lighthouse)
@@ -421,18 +420,21 @@ npm run lighthouse:desktop
 ### Optimization Strategies
 
 **Images**:
+
 - WebP/AVIF format conversion
 - Responsive image sizing
 - Lazy loading for below-fold content
 - Alt text for accessibility
 
 **JavaScript**:
+
 - Code splitting by route
 - Tree shaking for unused code
 - Dynamic imports for heavy components
 - Bundle size monitoring
 
 **CSS**:
+
 - Critical CSS inlining
 - Unused CSS removal
 - CSS minification and compression
@@ -443,6 +445,7 @@ npm run lighthouse:desktop
 ### Health Monitoring
 
 **Automated Checks**:
+
 - HTTP status monitoring (every 5 minutes)
 - Response time measurement
 - SSL certificate expiration (30-day warning)
@@ -450,6 +453,7 @@ npm run lighthouse:desktop
 - Performance regression detection
 
 **Monitoring Endpoints**:
+
 ```bash
 # Production health check
 curl -f https://borderlessbits.com/
@@ -467,17 +471,19 @@ curl -f https://backup.borderlessbits.com/
 ### Performance Monitoring
 
 **Core Web Vitals Tracking**:
+
 ```javascript
 // Real User Monitoring
 import { getCLS, getFID, getFCP, getLCP } from 'web-vitals';
 
 getCLS(console.log);
-getFID(console.log);  
+getFID(console.log);
 getFCP(console.log);
 getLCP(console.log);
 ```
 
 **Lighthouse CI Integration**:
+
 ```bash
 # Continuous performance monitoring
 lhci autorun --config=lighthouserc.json
@@ -489,11 +495,13 @@ npm run lighthouse:ci
 ### Alert Configuration
 
 **Alert Levels**:
+
 - 🟢 **Healthy**: All systems operational
 - 🟡 **Warning**: Non-critical issues detected
 - 🔴 **Critical**: Service unavailable or compromised
 
 **Notification Channels**:
+
 - GitHub Actions workflow status
 - Email alerts (configurable)
 - Slack/Discord webhooks (configurable)
@@ -504,6 +512,7 @@ npm run lighthouse:ci
 ### Common Deployment Issues
 
 **Build Failures**:
+
 ```bash
 # Check Node.js version
 node --version  # Should be 18+
@@ -521,6 +530,7 @@ npm run validate
 ```
 
 **Deployment Failures**:
+
 ```bash
 # Check GitHub Actions logs
 gh run list --workflow=deploy-production.yml
@@ -538,6 +548,7 @@ curl -f https://api.netlify.com/api/v1/sites \
 ```
 
 **Performance Issues**:
+
 ```bash
 # Analyze bundle sizes
 npm run analyze
@@ -553,6 +564,7 @@ npm run test:performance
 ```
 
 **Form Issues**:
+
 ```bash
 # Test EmailJS configuration
 curl -X POST https://api.emailjs.com/api/v1.0/email/send \
@@ -569,7 +581,9 @@ curl -X POST https://your-site.netlify.app/ \
 ### Emergency Procedures
 
 **Critical Production Issue**:
+
 1. **Immediate Response**:
+
    ```bash
    # Execute emergency rollback
    ./scripts/rollback.sh -y -e production
@@ -594,11 +608,13 @@ curl -X POST https://your-site.netlify.app/ \
    - Implement preventive measures
 
 **Security Incident**:
+
 1. **Immediate Actions**:
+
    ```bash
    # Rotate all secrets
    ./scripts/setup-secrets.sh --rotate-all
-   
+
    # Review access logs
    gh api repos/:owner/:repo/actions/runs \
      --jq '.workflow_runs[] | select(.created_at > "2023-12-01")'
@@ -621,16 +637,19 @@ curl -X POST https://your-site.netlify.app/ \
 ### Traffic Growth Triggers
 
 **100GB/month Bandwidth Exceeded**:
+
 - **GitHub Pages**: Migrate to Netlify Pro ($19/month)
 - **Alternative**: Vercel Pro ($20/month)
 - **Enterprise**: Custom CDN solution
 
 **Form Submissions >100/month**:
+
 - **Netlify Pro**: $19/month for enhanced forms
 - **Alternative**: Formspree Pro ($10/month)
 - **Custom**: Serverless form handler (~$5/month)
 
 **Build Minutes >2000/month**:
+
 - **GitHub Actions**: Optimize pipeline efficiency
 - **Alternative**: Self-hosted runners
 - **Enterprise**: GitHub Enterprise ($21/user/month)
@@ -638,17 +657,20 @@ curl -X POST https://your-site.netlify.app/ \
 ### Enterprise Migration Path
 
 **Stage 1**: Enhanced Features ($20-40/month)
+
 - Netlify Pro: Advanced form processing
 - Vercel Pro: Enhanced deployment features
 - Uptime Robot Pro: Extended monitoring
 
 **Stage 2**: Custom Infrastructure ($100-500/month)
+
 - AWS/Azure cloud hosting
 - Custom CI/CD pipelines
 - Advanced monitoring solutions
 - Compliance and security features
 
 **Stage 3**: Enterprise Solutions ($500+/month)
+
 - Dedicated infrastructure
 - SLA guarantees
 - 24/7 support
@@ -658,9 +680,11 @@ curl -X POST https://your-site.netlify.app/ \
 
 ## Support
 
-**Documentation**: [GitHub Repository](https://github.com/username/borderlessbits.com)
-**Issues**: Create GitHub issue with detailed description
-**Email**: richard@borderlessbits.com
-**Response Time**: Within 24 hours for deployment issues
+**Documentation**:
+[GitHub Repository](https://github.com/username/borderlessbits.com) **Issues**:
+Create GitHub issue with detailed description **Email**:
+richard@borderlessbits.com **Response Time**: Within 24 hours for deployment
+issues
 
-**Emergency Support**: Available for critical production issues affecting business operations
+**Emergency Support**: Available for critical production issues affecting
+business operations

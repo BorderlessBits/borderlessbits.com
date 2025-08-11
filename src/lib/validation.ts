@@ -16,7 +16,8 @@ const SUSPICIOUS_PATTERNS = [
 ];
 
 // Email validation regex (RFC 5322 compliant)
-const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+const EMAIL_REGEX =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
 // Name validation regex (letters, spaces, hyphens, apostrophes, and some international characters)
 const NAME_REGEX = /^[a-zA-ZÀ-ÿ\u0100-\u017F\u0180-\u024F\u1E00-\u1EFF\s\-'\.]+$/;
@@ -33,11 +34,11 @@ export function sanitizeInput(input: string): string {
   }
 
   // First pass: DOMPurify to remove HTML tags
-  const cleaned = DOMPurify.sanitize(input, { 
-    ALLOWED_TAGS: [], 
-    ALLOWED_ATTR: [] 
+  const cleaned = DOMPurify.sanitize(input, {
+    ALLOWED_TAGS: [],
+    ALLOWED_ATTR: [],
   });
-  
+
   // Second pass: Additional sanitization
   return cleaned
     .trim()
@@ -52,10 +53,8 @@ export function validateField(field: string, value: string): string | null {
   const sanitizedValue = sanitizeInput(value);
 
   // Check for suspicious patterns
-  const hasSuspiciousContent = SUSPICIOUS_PATTERNS.some(pattern => 
-    pattern.test(sanitizedValue)
-  );
-  
+  const hasSuspiciousContent = SUSPICIOUS_PATTERNS.some(pattern => pattern.test(sanitizedValue));
+
   if (hasSuspiciousContent) {
     return 'Invalid characters detected. Please remove any HTML or script content.';
   }
@@ -142,7 +141,12 @@ export function validateContactForm(data: ContactFormData): FormErrors {
   }
 
   // Enum validation
-  const validProjectTypes = ['cloud_architecture', 'healthcare_software', 'enterprise_consulting', 'other'];
+  const validProjectTypes = [
+    'cloud_architecture',
+    'healthcare_software',
+    'enterprise_consulting',
+    'other',
+  ];
   if (!validProjectTypes.includes(data.project_type)) {
     errors.project_type = 'Please select a valid project type';
   }
@@ -176,19 +180,19 @@ export function isLikelySpam(data: ContactFormData): boolean {
   const spamIndicators = [
     // Check for excessive links in message
     (data.message.match(/https?:\/\//g) || []).length > 2,
-    
+
     // Check for repeated characters
     /(.)\1{10,}/.test(data.message),
-    
+
     // Check for common spam phrases
     /\b(buy now|click here|free money|guaranteed|limited time|act now)\b/i.test(data.message),
-    
+
     // Check for excessive caps
     data.message.replace(/[^A-Z]/g, '').length > data.message.length * 0.5,
-    
+
     // Check for suspicious email patterns
     /\d{5,}@/.test(data.email) || /noreply|no-reply/i.test(data.email),
-    
+
     // Check for very short or generic names
     data.name.length < 2 || /^(test|user|admin|name)$/i.test(data.name),
   ];
@@ -204,28 +208,28 @@ export class RateLimiter {
   private attempts: Map<string, number[]> = new Map();
 
   isAllowed(
-    identifier: string, 
-    maxAttempts: number = 5, 
+    identifier: string,
+    maxAttempts: number = 5,
     windowMs: number = 5 * 60 * 1000 // 5 minutes
   ): boolean {
     const now = Date.now();
     const attempts = this.attempts.get(identifier) || [];
-    
+
     // Remove attempts outside the window
     const validAttempts = attempts.filter(time => now - time < windowMs);
-    
+
     if (validAttempts.length >= maxAttempts) {
       return false;
     }
-    
+
     validAttempts.push(now);
     this.attempts.set(identifier, validAttempts);
     return true;
   }
 
   getRemainingTime(
-    identifier: string, 
-    maxAttempts: number = 5, 
+    identifier: string,
+    maxAttempts: number = 5,
     windowMs: number = 5 * 60 * 1000
   ): number {
     const attempts = this.attempts.get(identifier) || [];
@@ -254,7 +258,7 @@ export function isValidEmail(email: string): boolean {
 
   // Additional checks
   const [localPart, domain] = email.split('@');
-  
+
   // Check local part
   if (!localPart || localPart.length > 64) {
     return false;

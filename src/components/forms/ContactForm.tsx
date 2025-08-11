@@ -28,98 +28,103 @@ export function ContactForm() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [honeypotField, setHoneypotField] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
-  
+
   // Global form state
   const { isSubmitting, submitStatus, errorMessage, setStatus, resetForm } = useFormStore();
 
   /**
    * Handle input changes with validation
    */
-  const handleChange = useCallback((
-    field: keyof ContactFormData,
-    value: string
-  ) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // Clear field error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  }, [errors]);
+  const handleChange = useCallback(
+    (field: keyof ContactFormData, value: string) => {
+      setFormData(prev => ({ ...prev, [field]: value }));
+
+      // Clear field error when user starts typing
+      if (errors[field]) {
+        setErrors(prev => ({ ...prev, [field]: '' }));
+      }
+    },
+    [errors]
+  );
 
   /**
    * Handle form submission with dual processing
    */
-  const handleSubmit = useCallback(async (event: React.FormEvent) => {
-    event.preventDefault();
-    
-    // Honeypot spam detection
-    if (honeypotField) {
-      console.warn('Spam detected via honeypot');
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (event: React.FormEvent) => {
+      event.preventDefault();
 
-    // Rate limiting check (client-side backup)
-    const clientIP = 'client'; // Simplified identifier
-    if (!rateLimiter.isAllowed(clientIP)) {
-      const remainingTime = rateLimiter.getRemainingTime(clientIP);
-      setStatus('error', `Too many attempts. Please wait ${Math.ceil(remainingTime / 1000 / 60)} minutes.`);
-      return;
-    }
-
-    // Set submitting state
-    setStatus('submitting');
-    
-    try {
-      // Validate form data
-      const sanitizedData = formatFormDataForSubmission(formData);
-      const validationErrors = validateContactForm(sanitizedData);
-      
-      if (Object.keys(validationErrors).length > 0) {
-        setErrors(validationErrors);
-        setStatus('error', 'Please fix the errors above');
+      // Honeypot spam detection
+      if (honeypotField) {
+        console.warn('Spam detected via honeypot');
         return;
       }
 
-      // Track form submission attempt
-      trackFormSubmission('contact_form', false);
-
-      console.log('Submitting contact form...', sanitizedData);
-
-      // Submit form using dual processing strategy
-      const result = await submitContactForm(sanitizedData);
-      
-      if (result.success) {
-        console.log('Form submission successful:', result);
-        
-        // Track successful conversion
-        trackFormSubmission('contact_form', true);
-        trackConversion('contact_form', sanitizedData.project_type);
-        
-        // Reset form and show success
-        setFormData(initialFormData);
-        setErrors({});
-        setStatus('success', 'Thank you! Your message has been sent successfully.');
-        
-        // Scroll to top of form to show success message
-        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        
-      } else {
-        console.error('Form submission failed:', result);
-        trackFormSubmission('contact_form', false, result.message);
-        setStatus('error', result.message);
+      // Rate limiting check (client-side backup)
+      const clientIP = 'client'; // Simplified identifier
+      if (!rateLimiter.isAllowed(clientIP)) {
+        const remainingTime = rateLimiter.getRemainingTime(clientIP);
+        setStatus(
+          'error',
+          `Too many attempts. Please wait ${Math.ceil(remainingTime / 1000 / 60)} minutes.`
+        );
+        return;
       }
-      
-    } catch (error) {
-      console.error('Form submission error:', error);
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : 'An unexpected error occurred. Please try again.';
-      
-      trackFormSubmission('contact_form', false, errorMessage);
-      setStatus('error', errorMessage);
-    }
-  }, [formData, honeypotField, setStatus]);
+
+      // Set submitting state
+      setStatus('submitting');
+
+      try {
+        // Validate form data
+        const sanitizedData = formatFormDataForSubmission(formData);
+        const validationErrors = validateContactForm(sanitizedData);
+
+        if (Object.keys(validationErrors).length > 0) {
+          setErrors(validationErrors);
+          setStatus('error', 'Please fix the errors above');
+          return;
+        }
+
+        // Track form submission attempt
+        trackFormSubmission('contact_form', false);
+
+        console.log('Submitting contact form...', sanitizedData);
+
+        // Submit form using dual processing strategy
+        const result = await submitContactForm(sanitizedData);
+
+        if (result.success) {
+          console.log('Form submission successful:', result);
+
+          // Track successful conversion
+          trackFormSubmission('contact_form', true);
+          trackConversion('contact_form', sanitizedData.project_type);
+
+          // Reset form and show success
+          setFormData(initialFormData);
+          setErrors({});
+          setStatus('success', 'Thank you! Your message has been sent successfully.');
+
+          // Scroll to top of form to show success message
+          formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          console.error('Form submission failed:', result);
+          trackFormSubmission('contact_form', false, result.message);
+          setStatus('error', result.message);
+        }
+      } catch (error) {
+        console.error('Form submission error:', error);
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred. Please try again.';
+
+        trackFormSubmission('contact_form', false, errorMessage);
+        setStatus('error', errorMessage);
+      }
+    },
+    [formData, honeypotField, setStatus]
+  );
 
   /**
    * Reset form to initial state
@@ -132,7 +137,7 @@ export function ContactForm() {
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      <form 
+      <form
         ref={formRef}
         onSubmit={handleSubmit}
         className="space-y-6"
@@ -145,7 +150,7 @@ export function ContactForm() {
       >
         {/* Hidden field for Netlify Forms */}
         <input type="hidden" name="form-name" value="contact" />
-        
+
         {/* Honeypot field for spam detection */}
         <div className="hidden">
           <label htmlFor="website">Website (leave blank):</label>
@@ -154,7 +159,7 @@ export function ContactForm() {
             name="website"
             id="website"
             value={honeypotField}
-            onChange={(e) => setHoneypotField(e.target.value)}
+            onChange={e => setHoneypotField(e.target.value)}
             tabIndex={-1}
             autoComplete="off"
           />
@@ -166,7 +171,11 @@ export function ContactForm() {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <svg className="w-5 h-5 text-success-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </div>
               <div className="ml-3">
@@ -183,7 +192,11 @@ export function ContactForm() {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <svg className="w-5 h-5 text-error-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </div>
               <div className="ml-3">
@@ -211,7 +224,7 @@ export function ContactForm() {
             id="name"
             name="name"
             value={formData.name}
-            onChange={(e) => handleChange('name', e.target.value)}
+            onChange={e => handleChange('name', e.target.value)}
             className={`form-input ${errors.name ? 'border-error-500 focus:ring-error-500' : ''}`}
             placeholder="Enter your full name"
             required
@@ -231,7 +244,7 @@ export function ContactForm() {
             id="email"
             name="email"
             value={formData.email}
-            onChange={(e) => handleChange('email', e.target.value)}
+            onChange={e => handleChange('email', e.target.value)}
             className={`form-input ${errors.email ? 'border-error-500 focus:ring-error-500' : ''}`}
             placeholder="your.email@company.com"
             required
@@ -251,7 +264,7 @@ export function ContactForm() {
             id="company"
             name="company"
             value={formData.company}
-            onChange={(e) => handleChange('company', e.target.value)}
+            onChange={e => handleChange('company', e.target.value)}
             className={`form-input ${errors.company ? 'border-error-500 focus:ring-error-500' : ''}`}
             placeholder="Your company name"
             disabled={isSubmitting}
@@ -269,7 +282,7 @@ export function ContactForm() {
             id="project_type"
             name="project-type"
             value={formData.project_type}
-            onChange={(e) => handleChange('project_type', e.target.value)}
+            onChange={e => handleChange('project_type', e.target.value)}
             className={`form-select ${errors.project_type ? 'border-error-500 focus:ring-error-500' : ''}`}
             required
             disabled={isSubmitting}
@@ -291,7 +304,7 @@ export function ContactForm() {
             id="project_timeline"
             name="project-timeline"
             value={formData.project_timeline}
-            onChange={(e) => handleChange('project_timeline', e.target.value)}
+            onChange={e => handleChange('project_timeline', e.target.value)}
             className={`form-select ${errors.project_timeline ? 'border-error-500 focus:ring-error-500' : ''}`}
             required
             disabled={isSubmitting}
@@ -313,7 +326,7 @@ export function ContactForm() {
             id="budget_range"
             name="budget-range"
             value={formData.budget_range || ''}
-            onChange={(e) => handleChange('budget_range', e.target.value)}
+            onChange={e => handleChange('budget_range', e.target.value)}
             className="form-select"
             disabled={isSubmitting}
           >
@@ -334,7 +347,7 @@ export function ContactForm() {
             id="referral_source"
             name="referral-source"
             value={formData.referral_source || ''}
-            onChange={(e) => handleChange('referral_source', e.target.value)}
+            onChange={e => handleChange('referral_source', e.target.value)}
             className="form-select"
             disabled={isSubmitting}
           >
@@ -356,7 +369,7 @@ export function ContactForm() {
             name="message"
             rows={6}
             value={formData.message}
-            onChange={(e) => handleChange('message', e.target.value)}
+            onChange={e => handleChange('message', e.target.value)}
             className={`form-textarea ${errors.message ? 'border-error-500 focus:ring-error-500' : ''}`}
             placeholder="Please describe your project requirements, challenges, and goals. The more details you provide, the better we can assist you."
             required
@@ -375,15 +388,10 @@ export function ContactForm() {
 
         {/* Submit Button */}
         <div className="flex justify-between items-center pt-4">
-          <button
-            type="button"
-            onClick={handleReset}
-            className="btn-ghost"
-            disabled={isSubmitting}
-          >
+          <button type="button" onClick={handleReset} className="btn-ghost" disabled={isSubmitting}>
             Reset Form
           </button>
-          
+
           <button
             type="submit"
             disabled={isSubmitting}
@@ -403,9 +411,9 @@ export function ContactForm() {
         {/* Privacy Notice */}
         <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
           <p>
-            Your privacy is important to us. This form is secured with spam protection and your 
-            information will only be used to respond to your inquiry. We never share your data 
-            with third parties.
+            Your privacy is important to us. This form is secured with spam protection and your
+            information will only be used to respond to your inquiry. We never share your data with
+            third parties.
           </p>
         </div>
       </form>

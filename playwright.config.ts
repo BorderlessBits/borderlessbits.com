@@ -18,7 +18,7 @@ export default defineConfig({
     ['html'],
     ['json', { outputFile: 'playwright-report/results.json' }],
     ['junit', { outputFile: 'playwright-report/results.xml' }],
-    ...(process.env.CI ? [['github']] : [])
+    ...(process.env.CI ? [['github']] : []),
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -43,16 +43,12 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { 
+      use: {
         ...devices['Desktop Chrome'],
         // Additional Chrome flags for CI
         launchOptions: {
-          args: process.env.CI ? [
-            '--no-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-gpu'
-          ] : []
-        }
+          args: process.env.CI ? ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'] : [],
+        },
       },
     },
 
@@ -88,12 +84,14 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: process.env.CI ? undefined : {
-    command: 'npm run dev',
-    url: 'http://127.0.0.1:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
+  webServer: process.env.CI
+    ? undefined
+    : {
+        command: 'npm run dev',
+        url: 'http://127.0.0.1:3000',
+        reuseExistingServer: !process.env.CI,
+        timeout: 120000,
+      },
 
   /* Test timeout */
   timeout: 60000,

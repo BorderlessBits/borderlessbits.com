@@ -1,6 +1,7 @@
 # BorderlessBits.com
 
-Professional cloud architecture and healthcare software consulting website with enterprise-grade CI/CD pipeline.
+Professional cloud architecture and healthcare software consulting website with
+enterprise-grade CI/CD pipeline.
 
 [![CI/CD Pipeline](https://github.com/username/borderlessbits.com/workflows/CI/badge.svg)](https://github.com/username/borderlessbits.com/actions)
 [![Security Scan](https://github.com/username/borderlessbits.com/workflows/Security%20Scanning/badge.svg)](https://github.com/username/borderlessbits.com/actions)
@@ -10,12 +11,14 @@ Professional cloud architecture and healthcare software consulting website with 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm 9+
 - Git
 - Docker (optional)
 
 ### Local Development
+
 ```bash
 # Clone repository
 git clone https://github.com/username/borderlessbits.com.git
@@ -35,6 +38,7 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 ### Docker Development
+
 ```bash
 # Start with Docker Compose
 docker-compose up
@@ -46,6 +50,7 @@ docker-compose --profile production up
 ## 🏗️ Architecture
 
 ### Technology Stack
+
 - **Frontend**: Next.js 14, React 18, TypeScript
 - **Styling**: Tailwind CSS, PostCSS
 - **Forms**: EmailJS, Netlify Forms
@@ -54,8 +59,9 @@ docker-compose --profile production up
 - **CDN**: Cloudflare, GitHub Pages CDN
 
 ### Zero-Cost Hosting Strategy
+
 - **GitHub Pages**: 100GB bandwidth/month (free)
-- **Netlify**: 100GB bandwidth/month (free) 
+- **Netlify**: 100GB bandwidth/month (free)
 - **GitHub Actions**: 2000 minutes/month (free)
 - **Analytics**: Google Analytics (free)
 - **Monitoring**: Uptime Robot (50 monitors free)
@@ -64,6 +70,7 @@ docker-compose --profile production up
 ## 📋 Features
 
 ### 🎯 Core Features
+
 - ✅ **Static Site Generation**: Optimized performance with Next.js
 - ✅ **Responsive Design**: Mobile-first approach with Tailwind CSS
 - ✅ **Contact Forms**: EmailJS integration with spam protection
@@ -72,6 +79,7 @@ docker-compose --profile production up
 - ✅ **Accessibility**: WCAG 2.1 AA compliance
 
 ### 🔒 Security Features
+
 - ✅ **Security Headers**: CSP, HSTS, X-Frame-Options
 - ✅ **Input Sanitization**: DOMPurify for form inputs
 - ✅ **Rate Limiting**: Form submission protection
@@ -80,9 +88,10 @@ docker-compose --profile production up
 - ✅ **Secret Management**: Encrypted environment variables
 
 ### 🚀 CI/CD Pipeline
+
 - ✅ **Quality Gates**: ESLint, TypeScript, Prettier, Tests
 - ✅ **Security Scanning**: CodeQL, Trivy, TruffleHog, GitLeaks
-- ✅ **Multi-Environment**: Production, staging, preview deployments  
+- ✅ **Multi-Environment**: Production, staging, preview deployments
 - ✅ **Automated Rollback**: Health check failures trigger rollback
 - ✅ **Performance Monitoring**: Lighthouse CI integration
 - ✅ **Visual Regression**: Playwright screenshot testing
@@ -90,9 +99,10 @@ docker-compose --profile production up
 ## 🚦 Development Workflow
 
 ### Branch Strategy
+
 ```
 main           ← Production deployments (https://borderlessbits.com)
-develop        ← Staging deployments (https://staging.borderlessbits.com)  
+develop        ← Staging deployments (https://staging.borderlessbits.com)
 feature/*      ← Preview deployments (https://preview-pr-{number}.netlify.app)
 hotfix/*       ← Emergency production fixes
 ```
@@ -100,6 +110,7 @@ hotfix/*       ← Emergency production fixes
 ### Available Scripts
 
 **Development**:
+
 ```bash
 npm run dev          # Start development server
 npm run build        # Production build
@@ -108,6 +119,7 @@ npm run preview      # Preview production build locally
 ```
 
 **Quality & Testing**:
+
 ```bash
 npm run lint         # Run ESLint
 npm run lint:fix     # Fix ESLint issues
@@ -120,6 +132,7 @@ npm run validate-build # Full validation pipeline
 ```
 
 **Performance & Analysis**:
+
 ```bash
 npm run analyze      # Bundle analysis
 npm run lighthouse   # Lighthouse audit
@@ -127,9 +140,10 @@ npm run lighthouse:ci # Lighthouse CI validation
 ```
 
 **Deployment**:
+
 ```bash
 ./scripts/deploy.sh              # Deploy to production
-./scripts/deploy.sh -e staging   # Deploy to staging  
+./scripts/deploy.sh -e staging   # Deploy to staging
 ./scripts/deploy.sh -d           # Dry run deployment
 ./scripts/rollback.sh            # Emergency rollback
 ./scripts/rollback.sh -l         # List available backups
@@ -182,6 +196,7 @@ npm run lighthouse:ci # Lighthouse CI validation
 ### Environment Variables
 
 **Required for Production**:
+
 ```env
 NEXT_PUBLIC_SITE_URL=https://borderlessbits.com
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
@@ -191,6 +206,7 @@ NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=xxxxxxxxxx
 ```
 
 **Required for Deployment**:
+
 ```env
 NETLIFY_AUTH_TOKEN=nfp_xxxxxxxxxx
 NETLIFY_SITE_ID=xxxxxxxx-xxxx-xxxx-xxxx
@@ -200,15 +216,17 @@ GITHUB_TOKEN=ghp_xxxxxxxxxx
 See [.env.example](.env.example) for complete configuration options.
 
 ### GitHub Secrets Setup
+
 ```bash
 # Interactive setup
 ./scripts/setup-secrets.sh -t $GITHUB_TOKEN -r username/repository
 
-# List current secrets  
+# List current secrets
 ./scripts/setup-secrets.sh -t $GITHUB_TOKEN -r username/repository -l
 ```
 
 Required GitHub Secrets:
+
 - `GA_MEASUREMENT_ID` - Google Analytics tracking ID
 - `EMAILJS_SERVICE_ID` - EmailJS service configuration
 - `EMAILJS_TEMPLATE_ID` - Email template ID
@@ -221,11 +239,13 @@ Required GitHub Secrets:
 ## 🚀 Deployment
 
 ### Automatic Deployment
+
 - **Production**: Push to `main` branch
-- **Staging**: Push to `develop` branch  
+- **Staging**: Push to `develop` branch
 - **Preview**: Create pull request
 
 ### Manual Deployment
+
 ```bash
 # Deploy to all targets
 ./scripts/deploy.sh
@@ -241,6 +261,7 @@ Required GitHub Secrets:
 ```
 
 ### Rollback Procedures
+
 ```bash
 # Emergency rollback
 ./scripts/rollback.sh -y
@@ -255,20 +276,23 @@ Required GitHub Secrets:
 ## 📊 Monitoring
 
 ### Health Monitoring
+
 - **Uptime**: 24/7 monitoring with 5-minute intervals
 - **Performance**: Lighthouse CI on every deployment
 - **Security**: Daily vulnerability scans
 - **SSL**: Certificate expiration monitoring
 
 ### Performance Budgets
+
 - **Performance Score**: >80 (Lighthouse)
-- **Accessibility Score**: >95 (Lighthouse)  
+- **Accessibility Score**: >95 (Lighthouse)
 - **Bundle Size**: <2MB total JavaScript
 - **First Contentful Paint**: <2s
 - **Largest Contentful Paint**: <2.5s
 - **Cumulative Layout Shift**: <0.1
 
 ### Monitoring Endpoints
+
 - Production: https://borderlessbits.com
 - Staging: https://staging.borderlessbits.com
 - Backup: https://backup.borderlessbits.com
@@ -276,6 +300,7 @@ Required GitHub Secrets:
 ## 🔒 Security
 
 ### Security Features
+
 - **Content Security Policy**: XSS protection
 - **Security Headers**: HSTS, X-Frame-Options, X-XSS-Protection
 - **Input Sanitization**: DOMPurify for user inputs
@@ -284,12 +309,14 @@ Required GitHub Secrets:
 - **Secret Management**: GitHub secrets encryption
 
 ### Security Scanning
+
 - **Daily Scans**: Dependency vulnerabilities, code analysis
 - **Deployment Gates**: Security validation before production
 - **Container Scanning**: Docker image vulnerability assessment
 - **Secret Detection**: Credential scanning in code and history
 
 ### Incident Response
+
 - **Detection**: Automated monitoring and alerting
 - **Response Time**: <4 hours for critical issues
 - **Escalation**: Automated notifications for security incidents
@@ -298,6 +325,7 @@ Required GitHub Secrets:
 ## 🧪 Testing
 
 ### Test Types
+
 - **Unit Tests**: Jest with React Testing Library
 - **E2E Tests**: Playwright across Chrome, Firefox, Safari
 - **Performance Tests**: Lighthouse CI validation
@@ -305,15 +333,17 @@ Required GitHub Secrets:
 - **Security Tests**: OWASP ZAP baseline scans
 
 ### Test Commands
+
 ```bash
 npm run test              # Unit tests
-npm run test:e2e          # End-to-end tests  
+npm run test:e2e          # End-to-end tests
 npm run test:performance  # Performance tests
 npm run test:visual       # Visual regression tests
 npm run test:security     # Security tests
 ```
 
 ### Test Coverage
+
 - **Target Coverage**: >80% for unit tests
 - **E2E Coverage**: Critical user journeys
 - **Performance Coverage**: All major pages
@@ -321,10 +351,14 @@ npm run test:security     # Security tests
 
 ## 📚 Documentation
 
-- **[CI/CD Pipeline](docs/CI-CD-PIPELINE.md)**: Comprehensive pipeline documentation
-- **[Deployment Guide](docs/DEPLOYMENT-GUIDE.md)**: Step-by-step deployment instructions
-- **[Security Documentation](docs/SECURITY.md)**: Security architecture and procedures
-- **[Architecture Overview](docs/ARCHITECTURE.md)**: System design and technical decisions
+- **[CI/CD Pipeline](docs/CI-CD-PIPELINE.md)**: Comprehensive pipeline
+  documentation
+- **[Deployment Guide](docs/DEPLOYMENT-GUIDE.md)**: Step-by-step deployment
+  instructions
+- **[Security Documentation](docs/SECURITY.md)**: Security architecture and
+  procedures
+- **[Architecture Overview](docs/ARCHITECTURE.md)**: System design and technical
+  decisions
 
 ## 🤝 Contributing
 
@@ -337,30 +371,35 @@ npm run test:security     # Security tests
 7. **Open Pull Request**: Include description and testing notes
 
 ### Code Quality Standards
+
 - **ESLint**: No errors or warnings
 - **TypeScript**: Strict type checking
-- **Prettier**: Consistent formatting  
+- **Prettier**: Consistent formatting
 - **Tests**: Maintain >80% coverage
 - **Performance**: Meet Lighthouse budgets
 - **Security**: Pass all security scans
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details.
 
 ## 🆘 Support
 
 ### Documentation & Resources
+
 - **GitHub Issues**: Bug reports and feature requests
 - **Discussions**: Community questions and ideas
 - **Wiki**: Additional documentation and guides
 
 ### Contact
+
 - **Email**: richard@borderlessbits.com
 - **Website**: https://borderlessbits.com
 - **Response Time**: Within 24 hours for issues
 
 ### Emergency Support
+
 - **Production Issues**: Critical deployment or security issues
 - **Security Incidents**: Immediate response for security concerns
 - **Emergency Contact**: Available for business-critical issues
@@ -370,7 +409,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🌟 Acknowledgments
 
 - **Next.js Team**: Amazing React framework
-- **Vercel**: Inspiration for deployment strategies  
+- **Vercel**: Inspiration for deployment strategies
 - **Netlify**: Reliable backup hosting
 - **GitHub**: Excellent CI/CD platform
 - **Open Source Community**: Security tools and best practices
@@ -381,7 +420,11 @@ Built with ❤️ by [Richard Mosley](https://github.com/username) at Borderless
 
 ## 📈 Status
 
-- **Build Status**: [![CI](https://github.com/username/borderlessbits.com/workflows/CI/badge.svg)](https://github.com/username/borderlessbits.com/actions)
-- **Security**: [![Security](https://github.com/username/borderlessbits.com/workflows/Security%20Scanning/badge.svg)](https://github.com/username/borderlessbits.com/actions)  
-- **Uptime**: [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m793494864-bb123456789abcdef0)](https://status.borderlessbits.com)
-- **Performance**: [![Lighthouse](https://img.shields.io/badge/lighthouse-100%25-brightgreen.svg)](https://developers.google.com/speed/pagespeed/insights/?url=https%3A%2F%2Fborderlessbits.com)
+- **Build Status**:
+  [![CI](https://github.com/username/borderlessbits.com/workflows/CI/badge.svg)](https://github.com/username/borderlessbits.com/actions)
+- **Security**:
+  [![Security](https://github.com/username/borderlessbits.com/workflows/Security%20Scanning/badge.svg)](https://github.com/username/borderlessbits.com/actions)
+- **Uptime**:
+  [![Uptime Robot status](https://img.shields.io/uptimerobot/status/m793494864-bb123456789abcdef0)](https://status.borderlessbits.com)
+- **Performance**:
+  [![Lighthouse](https://img.shields.io/badge/lighthouse-100%25-brightgreen.svg)](https://developers.google.com/speed/pagespeed/insights/?url=https%3A%2F%2Fborderlessbits.com)

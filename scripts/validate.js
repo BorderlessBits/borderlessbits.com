@@ -16,16 +16,17 @@ const PROJECT_ROOT = process.cwd();
  */
 function log(message, level = 'info') {
   const colors = {
-    info: '\x1b[36m',      // Cyan
-    success: '\x1b[32m',   // Green
-    warn: '\x1b[33m',      // Yellow
-    error: '\x1b[31m',     // Red
-    reset: '\x1b[0m'       // Reset
+    info: '\x1b[36m', // Cyan
+    success: '\x1b[32m', // Green
+    warn: '\x1b[33m', // Yellow
+    error: '\x1b[31m', // Red
+    reset: '\x1b[0m', // Reset
   };
-  
+
   const color = colors[level] || colors.info;
-  const prefix = level === 'error' ? '❌' : level === 'warn' ? '⚠️' : level === 'success' ? '✅' : 'ℹ️';
-  
+  const prefix =
+    level === 'error' ? '❌' : level === 'warn' ? '⚠️' : level === 'success' ? '✅' : 'ℹ️';
+
   console.log(`${color}${prefix} ${message}${colors.reset}`);
 }
 
@@ -64,7 +65,7 @@ function readJsonFile(filePath) {
  */
 function validateProjectStructure() {
   log('Validating project structure...');
-  
+
   const requiredFiles = [
     'package.json',
     'next.config.js',
@@ -76,9 +77,9 @@ function validateProjectStructure() {
     'src/lib/validation.ts',
     'src/lib/emailjs.ts',
     'src/components/forms/ContactForm.tsx',
-    '.github/workflows/deploy.yml'
+    '.github/workflows/deploy.yml',
   ];
-  
+
   const requiredDirectories = [
     'src',
     'src/app',
@@ -88,11 +89,11 @@ function validateProjectStructure() {
     'content/blog',
     'content/case-studies',
     'public',
-    'scripts'
+    'scripts',
   ];
-  
+
   let structureValid = true;
-  
+
   // Check files
   requiredFiles.forEach(file => {
     if (fileExists(file)) {
@@ -102,7 +103,7 @@ function validateProjectStructure() {
       structureValid = false;
     }
   });
-  
+
   // Check directories
   requiredDirectories.forEach(dir => {
     if (fs.existsSync(path.join(PROJECT_ROOT, dir))) {
@@ -112,7 +113,7 @@ function validateProjectStructure() {
       structureValid = false;
     }
   });
-  
+
   return structureValid;
 }
 
@@ -121,20 +122,18 @@ function validateProjectStructure() {
  */
 function validatePackageJson() {
   log('Validating package.json...');
-  
+
   const packageJson = readJsonFile('package.json');
   if (!packageJson) {
     log('✗ package.json not found or invalid', 'error');
     return false;
   }
-  
+
   let isValid = true;
-  
+
   // Check required scripts
-  const requiredScripts = [
-    'dev', 'build', 'start', 'lint', 'type-check', 'test'
-  ];
-  
+  const requiredScripts = ['dev', 'build', 'start', 'lint', 'type-check', 'test'];
+
   requiredScripts.forEach(script => {
     if (packageJson.scripts && packageJson.scripts[script]) {
       log(`✓ Script: ${script}`, 'success');
@@ -143,13 +142,18 @@ function validatePackageJson() {
       isValid = false;
     }
   });
-  
+
   // Check required dependencies
   const requiredDeps = [
-    'next', 'react', 'react-dom', '@emailjs/browser', 
-    'gray-matter', 'remark', 'isomorphic-dompurify'
+    'next',
+    'react',
+    'react-dom',
+    '@emailjs/browser',
+    'gray-matter',
+    'remark',
+    'isomorphic-dompurify',
   ];
-  
+
   requiredDeps.forEach(dep => {
     if (packageJson.dependencies && packageJson.dependencies[dep]) {
       log(`✓ Dependency: ${dep}`, 'success');
@@ -158,14 +162,14 @@ function validatePackageJson() {
       isValid = false;
     }
   });
-  
+
   // Check Node.js version requirement
   if (packageJson.engines && packageJson.engines.node) {
     log(`✓ Node.js version requirement: ${packageJson.engines.node}`, 'success');
   } else {
     log('⚠ Node.js version not specified', 'warn');
   }
-  
+
   return isValid;
 }
 
@@ -174,29 +178,29 @@ function validatePackageJson() {
  */
 function validateTypeScript() {
   log('Validating TypeScript configuration...');
-  
+
   const tsConfig = readJsonFile('tsconfig.json');
   if (!tsConfig) {
     log('✗ tsconfig.json not found or invalid', 'error');
     return false;
   }
-  
+
   let isValid = true;
-  
+
   // Check strict mode
   if (tsConfig.compilerOptions && tsConfig.compilerOptions.strict) {
     log('✓ Strict mode enabled', 'success');
   } else {
     log('⚠ Strict mode not enabled', 'warn');
   }
-  
+
   // Check path mapping
   if (tsConfig.compilerOptions && tsConfig.compilerOptions.paths) {
     log('✓ Path mapping configured', 'success');
   } else {
     log('⚠ Path mapping not configured', 'warn');
   }
-  
+
   return isValid;
 }
 
@@ -205,15 +209,15 @@ function validateTypeScript() {
  */
 function validateNextConfig() {
   log('Validating Next.js configuration...');
-  
+
   const nextConfigPath = path.join(PROJECT_ROOT, 'next.config.js');
   if (!fs.existsSync(nextConfigPath)) {
     log('✗ next.config.js not found', 'error');
     return false;
   }
-  
+
   const nextConfig = readFile('next.config.js');
-  
+
   // Check for static export
   if (nextConfig.includes("output: 'export'")) {
     log('✓ Static export configured', 'success');
@@ -221,14 +225,14 @@ function validateNextConfig() {
     log('✗ Static export not configured', 'error');
     return false;
   }
-  
+
   // Check for security headers
   if (nextConfig.includes('headers()')) {
     log('✓ Security headers configured', 'success');
   } else {
     log('⚠ Security headers not found', 'warn');
   }
-  
+
   return true;
 }
 
@@ -237,30 +241,30 @@ function validateNextConfig() {
  */
 function validateEnvironment() {
   log('Validating environment configuration...');
-  
+
   let isValid = true;
-  
+
   // Check for environment example file
   if (fileExists('.env.local.example')) {
     log('✓ Environment example file exists', 'success');
   } else {
     log('⚠ .env.local.example not found', 'warn');
   }
-  
+
   // Check for production environment file
   if (fileExists('.env.production')) {
     log('✓ Production environment file exists', 'success');
   } else {
     log('⚠ .env.production not found', 'warn');
   }
-  
+
   // Warn about local environment file
   if (fileExists('.env.local')) {
     log('✓ Local environment file exists', 'success');
   } else {
     log('⚠ .env.local not found - copy from .env.local.example', 'warn');
   }
-  
+
   return isValid;
 }
 
@@ -269,17 +273,17 @@ function validateEnvironment() {
  */
 function validateGitHubActions() {
   log('Validating GitHub Actions workflow...');
-  
+
   const workflowPath = '.github/workflows/deploy.yml';
   const workflow = readFile(workflowPath);
-  
+
   if (!workflow) {
     log('✗ GitHub Actions workflow not found', 'error');
     return false;
   }
-  
+
   let isValid = true;
-  
+
   // Check for required jobs
   const requiredJobs = ['quality-check', 'build-and-test', 'deploy-production'];
   requiredJobs.forEach(job => {
@@ -290,14 +294,14 @@ function validateGitHubActions() {
       isValid = false;
     }
   });
-  
+
   // Check for Node.js version
   if (workflow.includes('NODE_VERSION: 18')) {
     log('✓ Node.js version configured', 'success');
   } else {
     log('⚠ Node.js version not found or incorrect', 'warn');
   }
-  
+
   return isValid;
 }
 
@@ -306,16 +310,16 @@ function validateGitHubActions() {
  */
 function validateContent() {
   log('Validating content structure...');
-  
+
   const contentDirs = ['content/blog', 'content/case-studies', 'content/pages'];
   let isValid = true;
-  
+
   contentDirs.forEach(dir => {
     const fullPath = path.join(PROJECT_ROOT, dir);
     if (fs.existsSync(fullPath)) {
       const files = fs.readdirSync(fullPath);
       const mdFiles = files.filter(file => file.endsWith('.md'));
-      
+
       if (mdFiles.length > 0) {
         log(`✓ Content found in ${dir}: ${mdFiles.length} files`, 'success');
       } else {
@@ -326,7 +330,7 @@ function validateContent() {
       isValid = false;
     }
   });
-  
+
   return isValid;
 }
 
@@ -335,7 +339,7 @@ function validateContent() {
  */
 function validateBuildReadiness() {
   log('Validating build readiness...');
-  
+
   // Check if node_modules exists
   if (fs.existsSync(path.join(PROJECT_ROOT, 'node_modules'))) {
     log('✓ Dependencies installed', 'success');
@@ -343,7 +347,7 @@ function validateBuildReadiness() {
     log('✗ Dependencies not installed - run "npm install"', 'error');
     return false;
   }
-  
+
   // Check for common build files
   const buildFiles = ['.next', 'out'];
   buildFiles.forEach(file => {
@@ -351,7 +355,7 @@ function validateBuildReadiness() {
       log(`⚠ Build artifact exists: ${file} - consider running "npm run clean"`, 'warn');
     }
   });
-  
+
   return true;
 }
 
@@ -360,7 +364,7 @@ function validateBuildReadiness() {
  */
 function runValidation() {
   log('🔍 Starting BorderlessBits.com project validation...\n');
-  
+
   const validations = [
     { name: 'Project Structure', fn: validateProjectStructure },
     { name: 'Package.json', fn: validatePackageJson },
@@ -371,29 +375,29 @@ function runValidation() {
     { name: 'Content Structure', fn: validateContent },
     { name: 'Build Readiness', fn: validateBuildReadiness },
   ];
-  
+
   let allValid = true;
   const results = [];
-  
+
   validations.forEach(({ name, fn }) => {
     log(`\n📋 Validating ${name}...`);
     const isValid = fn();
     results.push({ name, valid: isValid });
     if (!isValid) allValid = false;
   });
-  
+
   // Summary
   log('\n' + '='.repeat(60));
   log('📊 VALIDATION SUMMARY');
   log('='.repeat(60));
-  
+
   results.forEach(({ name, valid }) => {
     const status = valid ? '✅ PASS' : '❌ FAIL';
     log(`${status} ${name}`);
   });
-  
+
   log('='.repeat(60));
-  
+
   if (allValid) {
     log('🎉 All validations passed! Project is ready for deployment.', 'success');
     log('\nNext steps:');
@@ -438,5 +442,5 @@ module.exports = {
   validateGitHubActions,
   validateContent,
   validateBuildReadiness,
-  runValidation
+  runValidation,
 };

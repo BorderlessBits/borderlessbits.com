@@ -30,19 +30,18 @@
     }
   },
   "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
+    "next-env.d.ts", 
+    "**/*.ts", 
+    "**/*.tsx", 
+    ".next/types/**/*.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts"
   ],
   "exclude": [
     "node_modules",
     ".next",
     "out",
-    "tests/**/*",
-    "playwright.config.ts",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts"
+    "playwright.config.ts"
   ]
 }

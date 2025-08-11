@@ -2,9 +2,11 @@
 
 ## Public Repository Security Guidelines
 
-This is a **PUBLIC repository** for a business website. Follow these security practices:
+This is a **PUBLIC repository** for a business website. Follow these security
+practices:
 
 ### ✅ What CAN be public:
+
 - Website source code (Next.js, TypeScript, React)
 - Styling and design system (Tailwind CSS)
 - Public content (services, about, blog posts)
@@ -14,8 +16,9 @@ This is a **PUBLIC repository** for a business website. Follow these security pr
 - Build configurations
 
 ### ❌ What must NEVER be committed:
+
 - API keys or secrets
-- Email service credentials  
+- Email service credentials
 - Analytics private keys
 - Client data or private case studies
 - Database credentials
@@ -48,10 +51,12 @@ This is a **PUBLIC repository** for a business website. Follow these security pr
 ### 🚨 If You Find a Security Issue:
 
 **Do NOT:**
+
 - Post sensitive information in issues
 - Commit fixes that expose the vulnerability
 
 **Do:**
+
 - Email privately to richard@borderlessbits.com
 - Use GitHub's private security advisory feature
 - Allow time for fixes before public disclosure
@@ -59,6 +64,7 @@ This is a **PUBLIC repository** for a business website. Follow these security pr
 ### 📝 Pre-Commit Checklist:
 
 Before every commit, verify:
+
 - [ ] No API keys in code
 - [ ] No real email addresses (except business email)
 - [ ] No client-specific data
@@ -68,16 +74,17 @@ Before every commit, verify:
 ### 🔍 Regular Security Reviews:
 
 Monthly:
+
 - Review GitHub security alerts
 - Update dependencies
 - Check for exposed secrets
 
 Quarterly:
+
 - Full security audit
 - Penetration testing
 - Update security policies
 
 ---
 
-*Last Updated: December 2024*
-*Security Contact: richard@borderlessbits.com*
+_Last Updated: December 2024_ _Security Contact: richard@borderlessbits.com_

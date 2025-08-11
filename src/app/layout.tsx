@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import '../styles/globals.css';
 
 // Font optimization
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
@@ -15,7 +15,8 @@ export const metadata: Metadata = {
     template: '%s | BorderlessBits - Cloud Architecture & Healthcare Software Consulting',
     default: 'BorderlessBits - Expert Cloud Architecture & Healthcare Software Consulting',
   },
-  description: 'Expert cloud architecture consulting for enterprise and healthcare organizations. Specializing in AWS, Azure, HIPAA compliance, and scalable software solutions that drive business growth.',
+  description:
+    'Expert cloud architecture consulting for enterprise and healthcare organizations. Specializing in AWS, Azure, HIPAA compliance, and scalable software solutions that drive business growth.',
   keywords: [
     'cloud architecture',
     'healthcare software',
@@ -26,12 +27,12 @@ export const metadata: Metadata = {
     'cloud migration',
     'software consulting',
     'Richard Mosley',
-    'BorderlessBits'
+    'BorderlessBits',
   ],
   authors: [{ name: 'Richard Mosley', url: 'https://borderlessbits.com' }],
   creator: 'Richard Mosley',
   publisher: 'BorderlessBits',
-  
+
   // Open Graph metadata
   openGraph: {
     type: 'website',
@@ -39,7 +40,8 @@ export const metadata: Metadata = {
     url: 'https://borderlessbits.com',
     siteName: 'BorderlessBits',
     title: 'BorderlessBits - Expert Cloud Architecture & Healthcare Software Consulting',
-    description: 'Transform your enterprise with expert cloud architecture and healthcare software consulting. Specializing in AWS, Azure, and HIPAA-compliant solutions.',
+    description:
+      'Transform your enterprise with expert cloud architecture and healthcare software consulting. Specializing in AWS, Azure, and HIPAA-compliant solutions.',
     images: [
       {
         url: '/images/og-image.jpg',
@@ -49,16 +51,17 @@ export const metadata: Metadata = {
       },
     ],
   },
-  
+
   // Twitter metadata
   twitter: {
     card: 'summary_large_image',
     title: 'BorderlessBits - Expert Cloud Architecture Consulting',
-    description: 'Transform your enterprise with expert cloud architecture and healthcare software consulting.',
+    description:
+      'Transform your enterprise with expert cloud architecture and healthcare software consulting.',
     creator: '@borderlessbits',
     images: ['/images/twitter-image.jpg'],
   },
-  
+
   // Additional metadata
   robots: {
     index: true,
@@ -71,23 +74,21 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  
+
   // Verification
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
-  
+
   // App-specific metadata
   category: 'Technology',
   classification: 'Business',
-  
+
   // Additional SEO
   alternates: {
     canonical: 'https://borderlessbits.com',
     types: {
-      'application/rss+xml': [
-        { url: '/feed.xml', title: 'BorderlessBits Blog RSS Feed' },
-      ],
+      'application/rss+xml': [{ url: '/feed.xml', title: 'BorderlessBits Blog RSS Feed' }],
     },
   },
 };
@@ -104,11 +105,7 @@ export const viewport = {
   ],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable}>
       <head>
@@ -120,77 +117,77 @@ export default function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        
+
         {/* Favicon and app icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        
+
         {/* App manifest for PWA */}
         <link rel="manifest" href="/manifest.json" />
-        
+
         {/* DNS prefetching for external resources */}
         <link rel="dns-prefetch" href="//www.google-analytics.com" />
         <link rel="dns-prefetch" href="//cdn.emailjs.com" />
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-        
+
         {/* Preconnect to critical third-party origins */}
         <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
+
         {/* Structured data for business */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "ProfessionalService",
-              "name": "BorderlessBits",
-              "description": "Expert cloud architecture and healthcare software consulting services",
-              "url": "https://borderlessbits.com",
-              "logo": "https://borderlessbits.com/images/logo.png",
-              "image": "https://borderlessbits.com/images/og-image.jpg",
-              "telephone": "+1-555-0199", // Replace with actual phone number
-              "email": "richard@borderlessbits.com",
-              "founder": {
-                "@type": "Person",
-                "name": "Richard Mosley",
-                "jobTitle": "Senior Cloud Architect",
-                "url": "https://borderlessbits.com/about"
+              '@context': 'https://schema.org',
+              '@type': 'ProfessionalService',
+              name: 'BorderlessBits',
+              description: 'Expert cloud architecture and healthcare software consulting services',
+              url: 'https://borderlessbits.com',
+              logo: 'https://borderlessbits.com/images/logo.png',
+              image: 'https://borderlessbits.com/images/og-image.jpg',
+              telephone: '+1-555-0199', // Replace with actual phone number
+              email: 'richard@borderlessbits.com',
+              founder: {
+                '@type': 'Person',
+                name: 'Richard Mosley',
+                jobTitle: 'Senior Cloud Architect',
+                url: 'https://borderlessbits.com/about',
               },
-              "address": {
-                "@type": "PostalAddress",
-                "addressCountry": "US"
+              address: {
+                '@type': 'PostalAddress',
+                addressCountry: 'US',
               },
-              "sameAs": [
-                "https://www.linkedin.com/company/borderlessbits",
-                "https://twitter.com/borderlessbits"
+              sameAs: [
+                'https://www.linkedin.com/company/borderlessbits',
+                'https://twitter.com/borderlessbits',
               ],
-              "serviceType": [
-                "Cloud Architecture Consulting",
-                "Healthcare Software Development",
-                "Enterprise Technology Consulting",
-                "AWS Consulting",
-                "Azure Consulting",
-                "HIPAA Compliance Consulting"
+              serviceType: [
+                'Cloud Architecture Consulting',
+                'Healthcare Software Development',
+                'Enterprise Technology Consulting',
+                'AWS Consulting',
+                'Azure Consulting',
+                'HIPAA Compliance Consulting',
               ],
-              "areaServed": {
-                "@type": "Country",
-                "name": "United States"
+              areaServed: {
+                '@type': 'Country',
+                name: 'United States',
               },
-              "potentialAction": {
-                "@type": "ContactAction",
-                "target": {
-                  "@type": "EntryPoint",
-                  "urlTemplate": "https://borderlessbits.com/contact"
-                }
-              }
+              potentialAction: {
+                '@type': 'ContactAction',
+                target: {
+                  '@type': 'EntryPoint',
+                  urlTemplate: 'https://borderlessbits.com/contact',
+                },
+              },
             }),
           }}
         />
-        
+
         {/* Google Analytics */}
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
@@ -217,22 +214,17 @@ export default function RootLayout({
           </>
         )}
       </head>
-      <body 
-        className={`${inter.className} font-sans antialiased`}
-        suppressHydrationWarning={true}
-      >
+      <body className={`${inter.className} font-sans antialiased`} suppressHydrationWarning={true}>
         {/* Skip to main content for accessibility */}
-        <a 
-          href="#main-content" 
+        <a
+          href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded-md"
         >
           Skip to main content
         </a>
-        
-        <div className="min-h-screen bg-white">
-          {children}
-        </div>
-        
+
+        <div className="min-h-screen bg-white">{children}</div>
+
         {/* Performance monitoring script */}
         <script
           dangerouslySetInnerHTML={{
@@ -253,7 +245,7 @@ export default function RootLayout({
             `,
           }}
         />
-        
+
         {/* Service Worker registration for offline support */}
         <script
           dangerouslySetInnerHTML={{

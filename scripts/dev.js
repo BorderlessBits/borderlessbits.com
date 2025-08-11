@@ -22,16 +22,17 @@ const CONFIG = {
 function log(message, level = 'info') {
   const timestamp = new Date().toLocaleTimeString();
   const colors = {
-    info: '\x1b[36m',      // Cyan
-    success: '\x1b[32m',   // Green
-    warn: '\x1b[33m',      // Yellow
-    error: '\x1b[31m',     // Red
-    reset: '\x1b[0m'       // Reset
+    info: '\x1b[36m', // Cyan
+    success: '\x1b[32m', // Green
+    warn: '\x1b[33m', // Yellow
+    error: '\x1b[31m', // Red
+    reset: '\x1b[0m', // Reset
   };
-  
+
   const color = colors[level] || colors.info;
-  const prefix = level === 'error' ? '❌' : level === 'warn' ? '⚠️' : level === 'success' ? '✅' : 'ℹ️';
-  
+  const prefix =
+    level === 'error' ? '❌' : level === 'warn' ? '⚠️' : level === 'success' ? '✅' : 'ℹ️';
+
   console.log(`${color}${prefix} [${timestamp}] ${message}${colors.reset}`);
 }
 
@@ -40,7 +41,7 @@ function log(message, level = 'info') {
  */
 function checkEnvironmentFile() {
   const envExample = path.join(process.cwd(), '.env.local.example');
-  
+
   if (!fs.existsSync(CONFIG.envFile) && fs.existsSync(envExample)) {
     log('Creating .env.local from example file...');
     fs.copyFileSync(envExample, CONFIG.envFile);
@@ -66,9 +67,9 @@ function setupContentDirectories() {
     path.join(CONFIG.contentDir, 'case-studies'),
     path.join(CONFIG.contentDir, 'pages'),
   ];
-  
+
   let contentCreated = false;
-  
+
   directories.forEach(dir => {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -76,7 +77,7 @@ function setupContentDirectories() {
       contentCreated = true;
     }
   });
-  
+
   // Create sample content if directories were just created
   if (contentCreated) {
     createSampleContent();
@@ -88,7 +89,7 @@ function setupContentDirectories() {
  */
 function createSampleContent() {
   log('Creating sample content for development...');
-  
+
   const samplePost = `---
 title: "Getting Started with Development"
 description: "A guide to setting up the BorderlessBits.com development environment."
@@ -207,13 +208,17 @@ This project demonstrates how modern web technologies can deliver enterprise-qua
 `;
 
   const blogPath = path.join(CONFIG.contentDir, 'blog', 'getting-started-with-development.md');
-  const caseStudyPath = path.join(CONFIG.contentDir, 'case-studies', 'sample-project-implementation.md');
-  
+  const caseStudyPath = path.join(
+    CONFIG.contentDir,
+    'case-studies',
+    'sample-project-implementation.md'
+  );
+
   if (!fs.existsSync(blogPath)) {
     fs.writeFileSync(blogPath, samplePost);
     log('Created sample blog post');
   }
-  
+
   if (!fs.existsSync(caseStudyPath)) {
     fs.writeFileSync(caseStudyPath, sampleCaseStudy);
     log('Created sample case study');
@@ -226,19 +231,22 @@ This project demonstrates how modern web technologies can deliver enterprise-qua
 function checkDependencies() {
   const packageJsonPath = path.join(process.cwd(), 'package.json');
   const nodeModulesPath = path.join(process.cwd(), 'node_modules');
-  
+
   if (!fs.existsSync(nodeModulesPath)) {
     log('Node modules not found. Please run "npm install" first.', 'error');
     process.exit(1);
   }
-  
+
   // Check if package.json has been modified more recently than node_modules
   if (fs.existsSync(packageJsonPath)) {
     const packageStats = fs.statSync(packageJsonPath);
     const nodeModulesStats = fs.statSync(nodeModulesPath);
-    
+
     if (packageStats.mtime > nodeModulesStats.mtime) {
-      log('package.json has been modified. Consider running "npm install" to update dependencies.', 'warn');
+      log(
+        'package.json has been modified. Consider running "npm install" to update dependencies.',
+        'warn'
+      );
     }
   }
 }
@@ -248,7 +256,7 @@ function checkDependencies() {
  */
 function startDevServer() {
   log(`Starting development server on port ${CONFIG.port}...`);
-  
+
   const nextProcess = spawn('npx', ['next', 'dev', '-p', CONFIG.port], {
     stdio: 'inherit',
     shell: true,
@@ -256,30 +264,30 @@ function startDevServer() {
       ...process.env,
       NODE_ENV: CONFIG.nodeEnv,
       PORT: CONFIG.port,
-    }
+    },
   });
-  
+
   // Handle process termination
   process.on('SIGINT', () => {
     log('Shutting down development server...');
     nextProcess.kill('SIGINT');
     process.exit(0);
   });
-  
+
   process.on('SIGTERM', () => {
     log('Shutting down development server...');
     nextProcess.kill('SIGTERM');
     process.exit(0);
   });
-  
-  nextProcess.on('close', (code) => {
+
+  nextProcess.on('close', code => {
     if (code !== 0) {
       log(`Development server exited with code ${code}`, 'error');
       process.exit(code);
     }
   });
-  
-  nextProcess.on('error', (error) => {
+
+  nextProcess.on('error', error => {
     log(`Failed to start development server: ${error.message}`, 'error');
     process.exit(1);
   });
@@ -292,10 +300,12 @@ function displayStartupInfo() {
   log('BorderlessBits.com Development Server', 'success');
   log(`Local URL: http://localhost:${CONFIG.port}`);
   log(`Environment: ${CONFIG.nodeEnv}`);
-  
+
   // Show available scripts
   try {
-    const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
+    const packageJson = JSON.parse(
+      fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8')
+    );
     if (packageJson.scripts) {
       log('\nAvailable commands:');
       Object.entries(packageJson.scripts).forEach(([script, command]) => {
@@ -307,7 +317,7 @@ function displayStartupInfo() {
   } catch (error) {
     // Ignore if package.json can't be read
   }
-  
+
   log('\nPress Ctrl+C to stop the server\n');
 }
 
@@ -317,14 +327,13 @@ function displayStartupInfo() {
 function main() {
   try {
     log('Initializing BorderlessBits.com development environment...');
-    
+
     checkDependencies();
     checkEnvironmentFile();
     setupContentDirectories();
-    
+
     displayStartupInfo();
     startDevServer();
-    
   } catch (error) {
     log(`Failed to start development server: ${error.message}`, 'error');
     process.exit(1);
@@ -339,5 +348,5 @@ if (require.main === module) {
 module.exports = {
   main,
   CONFIG,
-  log
+  log,
 };

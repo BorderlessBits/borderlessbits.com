@@ -22,56 +22,56 @@ jobs:
   # ==========================================
   # UPTIME & AVAILABILITY MONITORING
   # ==========================================
-  
+
   uptime-check:
     name: 🟢 Uptime Check
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     strategy:
       fail-fast: false
       matrix:
         endpoint:
-          - name: "Production Home"
-            url: "https://borderlessbits.com"
+          - name: 'Production Home'
+            url: 'https://borderlessbits.com'
             expected_status: 200
             critical: true
-          - name: "Production Contact"
-            url: "https://borderlessbits.com/contact"
+          - name: 'Production Contact'
+            url: 'https://borderlessbits.com/contact'
             expected_status: 200
             critical: true
-          - name: "Staging Site"
-            url: "https://staging.borderlessbits.com"
+          - name: 'Staging Site'
+            url: 'https://staging.borderlessbits.com'
             expected_status: 200
             critical: false
-          - name: "Backup Site"
-            url: "https://backup.borderlessbits.com"
+          - name: 'Backup Site'
+            url: 'https://backup.borderlessbits.com'
             expected_status: 200
             critical: false
-            
+
     outputs:
       status: ${{ steps.check.outputs.status }}
       response_time: ${{ steps.check.outputs.response_time }}
-      
+
     steps:
       - name: 🔍 Health check - ${{ matrix.endpoint.name }}
         id: check
         run: |
           echo "Checking ${{ matrix.endpoint.url }}..."
-          
+
           # Perform health check with timeout and retries
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}:%{time_total}" \
             --max-time ${{ env.MONITORING_TIMEOUT }} \
             --retry 3 \
             --retry-delay 5 \
             "${{ matrix.endpoint.url }}" || echo "000:0.0")
-          
+
           STATUS_CODE=$(echo "$RESPONSE" | cut -d: -f1)
           RESPONSE_TIME=$(echo "$RESPONSE" | cut -d: -f2)
-          
+
           echo "status=$STATUS_CODE" >> $GITHUB_OUTPUT
           echo "response_time=$RESPONSE_TIME" >> $GITHUB_OUTPUT
-          
+
           if [ "$STATUS_CODE" = "${{ matrix.endpoint.expected_status }}" ]; then
             echo "✅ ${{ matrix.endpoint.name }}: OK ($RESPONSE_TIME s)"
             echo "healthy=true" >> $GITHUB_OUTPUT
@@ -87,28 +87,28 @@ jobs:
   # ==========================================
   # PERFORMANCE MONITORING
   # ==========================================
-  
+
   performance-check:
     name: ⚡ Performance Check
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: github.event.inputs.full_check == 'true' || github.event_name == 'schedule'
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: ⚡ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          
+
       - name: 📦 Install dependencies
         run: npm ci --prefer-offline --no-audit
-        
+
       - name: 📦 Install Lighthouse CI
         run: npm install -g @lhci/cli@0.12.x
-        
+
       - name: 💡 Run Lighthouse audit
         id: lighthouse
         run: |
@@ -140,9 +140,9 @@ jobs:
             }
           }
           EOF
-          
+
           lhci autorun --config=lighthouserc.monitor.json || true
-          
+
       - name: 📊 Performance summary
         run: |
           echo "## ⚡ Performance Monitoring Results" >> $GITHUB_STEP_SUMMARY
@@ -154,46 +154,46 @@ jobs:
   # ==========================================
   # SSL/TLS CERTIFICATE MONITORING
   # ==========================================
-  
+
   ssl-check:
     name: 🔒 SSL Certificate Check
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    
+
     strategy:
       fail-fast: false
       matrix:
         domain:
-          - "borderlessbits.com"
-          - "www.borderlessbits.com"
-          - "staging.borderlessbits.com"
-          - "backup.borderlessbits.com"
-          
+          - 'borderlessbits.com'
+          - 'www.borderlessbits.com'
+          - 'staging.borderlessbits.com'
+          - 'backup.borderlessbits.com'
+
     steps:
       - name: 🔒 Check SSL certificate - ${{ matrix.domain }}
         id: ssl_check
         run: |
           echo "Checking SSL certificate for ${{ matrix.domain }}..."
-          
+
           # Get certificate expiration date
           CERT_INFO=$(echo | openssl s_client -servername ${{ matrix.domain }} -connect ${{ matrix.domain }}:443 2>/dev/null | openssl x509 -noout -dates 2>/dev/null || echo "FAILED")
-          
+
           if [ "$CERT_INFO" = "FAILED" ]; then
             echo "❌ Failed to retrieve SSL certificate for ${{ matrix.domain }}"
             echo "status=failed" >> $GITHUB_OUTPUT
             exit 1
           fi
-          
+
           # Extract expiration date
           EXPIRY_DATE=$(echo "$CERT_INFO" | grep "notAfter" | cut -d= -f2)
           EXPIRY_TIMESTAMP=$(date -d "$EXPIRY_DATE" +%s 2>/dev/null || date -j -f "%b %d %H:%M:%S %Y %Z" "$EXPIRY_DATE" +%s 2>/dev/null || echo "0")
           CURRENT_TIMESTAMP=$(date +%s)
           DAYS_UNTIL_EXPIRY=$(( (EXPIRY_TIMESTAMP - CURRENT_TIMESTAMP) / 86400 ))
-          
+
           echo "status=valid" >> $GITHUB_OUTPUT
           echo "expiry_date=$EXPIRY_DATE" >> $GITHUB_OUTPUT
           echo "days_until_expiry=$DAYS_UNTIL_EXPIRY" >> $GITHUB_OUTPUT
-          
+
           if [ $DAYS_UNTIL_EXPIRY -lt 30 ]; then
             echo "⚠️ SSL certificate for ${{ matrix.domain }} expires in $DAYS_UNTIL_EXPIRY days"
             echo "urgency=high" >> $GITHUB_OUTPUT
@@ -208,21 +208,21 @@ jobs:
   # ==========================================
   # DNS MONITORING
   # ==========================================
-  
+
   dns-check:
     name: 🌐 DNS Check
     runs-on: ubuntu-latest
     timeout-minutes: 5
     if: github.event.inputs.full_check == 'true' || github.event_name == 'schedule'
-    
+
     steps:
       - name: 🌐 DNS resolution check
         run: |
           echo "## 🌐 DNS Resolution Check" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           DOMAINS=("borderlessbits.com" "www.borderlessbits.com" "staging.borderlessbits.com")
-          
+
           for domain in "${DOMAINS[@]}"; do
             echo "Checking DNS for $domain..."
             
@@ -246,22 +246,22 @@ jobs:
   # ==========================================
   # SECURITY MONITORING
   # ==========================================
-  
+
   security-headers-check:
     name: 🛡️ Security Headers Check
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
       - name: 🛡️ Check security headers
         run: |
           echo "Checking security headers..."
-          
+
           URLS=(
             "https://borderlessbits.com"
             "https://borderlessbits.com/contact"
           )
-          
+
           for url in "${URLS[@]}"; do
             echo "Checking headers for $url..."
             
@@ -295,31 +295,31 @@ jobs:
   # ==========================================
   # DEPENDENCY MONITORING
   # ==========================================
-  
+
   dependency-check:
     name: 📦 Dependency Monitoring
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: github.event.inputs.full_check == 'true' || github.event_name == 'schedule'
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: ⚡ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-          
+
       - name: 📦 Install dependencies
         run: npm ci --prefer-offline --no-audit
-        
+
       - name: 🔍 Security audit
         run: |
           echo "Running security audit..."
           AUDIT_RESULT=$(npm audit --audit-level moderate --json || true)
-          
+
           # Parse audit results
           if echo "$AUDIT_RESULT" | jq -e '.vulnerabilities' > /dev/null 2>&1; then
             CRITICAL=$(echo "$AUDIT_RESULT" | jq '.metadata.vulnerabilities.critical // 0')
@@ -345,12 +345,12 @@ jobs:
             echo "✅ No vulnerabilities found"
             echo "critical_vulns=false" >> $GITHUB_OUTPUT
           fi
-          
+
       - name: 📊 Check for outdated packages
         run: |
           echo "Checking for outdated packages..."
           OUTDATED=$(npm outdated --json || echo '{}')
-          
+
           if [ "$OUTDATED" != '{}' ]; then
             echo "⚠️ Outdated packages found"
             echo "$OUTDATED" | jq -r 'keys[]' | head -10
@@ -361,71 +361,71 @@ jobs:
   # ==========================================
   # NOTIFICATION & ALERTING
   # ==========================================
-  
+
   alert-handler:
     name: 🚨 Alert Handler
     runs-on: ubuntu-latest
     needs: [uptime-check, ssl-check, dependency-check]
     if: always()
-    
+
     steps:
       - name: 📊 Collect monitoring results
         id: collect
         run: |
           # Collect results from all monitoring jobs
           echo "Collecting monitoring results..."
-          
+
           # Default to healthy status
           OVERALL_HEALTH="healthy"
           ALERTS=()
-          
+
           # Check uptime results
           if [ "${{ needs.uptime-check.result }}" != "success" ]; then
             OVERALL_HEALTH="unhealthy"
             ALERTS+=("Critical services are down")
           fi
-          
+
           # Check SSL certificate results  
           if [ "${{ needs.ssl-check.result }}" != "success" ]; then
             OVERALL_HEALTH="warning"
             ALERTS+=("SSL certificate issues detected")
           fi
-          
+
           # Check dependency results
           if [ "${{ needs.dependency-check.outputs.critical_vulns }}" = "true" ]; then
             OVERALL_HEALTH="warning"
             ALERTS+=("Critical security vulnerabilities found")
           fi
-          
+
           echo "overall_health=$OVERALL_HEALTH" >> $GITHUB_OUTPUT
           echo "alerts=${ALERTS[*]}" >> $GITHUB_OUTPUT
-          
+
       - name: 🟢 Healthy status
         if: steps.collect.outputs.overall_health == 'healthy'
         run: |
           echo "✅ All monitoring checks passed"
           echo "System is operating normally"
-          
+
       - name: ⚠️ Warning status
         if: steps.collect.outputs.overall_health == 'warning'
         run: |
           echo "⚠️ Monitoring warnings detected:"
           echo "${{ steps.collect.outputs.alerts }}"
-          
+
           # Here you would typically send notifications
           # Example: Slack webhook, email, etc.
-          
+
       - name: 🚨 Critical status
         if: steps.collect.outputs.overall_health == 'unhealthy'
         run: |
           echo "🚨 CRITICAL: System issues detected"
           echo "${{ steps.collect.outputs.alerts }}"
-          
+
           # Here you would send critical alerts
           # Example: PagerDuty, SMS, phone calls, etc.
-          
+
           exit 1
-          
+
       - name: 📈 Update monitoring dashboard
         run: |
           echo "## 🔍 Monitoring Dashboard" >> $GITHUB_STEP_SUMMARY

@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "prettier"
-  ],
+  "extends": ["next/core-web-vitals", "prettier"],
   "plugins": ["@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -19,20 +16,20 @@
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-    
+
     // React/Next.js specific rules
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "react-hooks/exhaustive-deps": "warn",
     "react/no-unescaped-entities": "off",
-    
+
     // General code quality rules
     "no-console": "off",
     "prefer-const": "error",
     "no-var": "error",
     "object-shorthand": "off",
     "prefer-arrow-callback": "error",
-    
+
     // Import organization
     "sort-imports": "off"
   },

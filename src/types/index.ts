@@ -10,29 +10,21 @@ export interface ContactFormData {
   referral_source?: ReferralSource;
 }
 
-export type ProjectType = 
-  | 'cloud_architecture' 
-  | 'healthcare_software' 
-  | 'enterprise_consulting' 
+export type ProjectType =
+  | 'cloud_architecture'
+  | 'healthcare_software'
+  | 'enterprise_consulting'
   | 'other';
 
-export type ProjectTimeline = 
-  | 'immediate' 
-  | 'within_3_months' 
-  | 'within_6_months' 
+export type ProjectTimeline =
+  | 'immediate'
+  | 'within_3_months'
+  | 'within_6_months'
   | 'planning_phase';
 
-export type BudgetRange = 
-  | 'under_25k' 
-  | 'from_25k_to_50k' 
-  | 'from_50k_to_100k' 
-  | 'over_100k';
+export type BudgetRange = 'under_25k' | 'from_25k_to_50k' | 'from_50k_to_100k' | 'over_100k';
 
-export type ReferralSource = 
-  | 'google_search' 
-  | 'linkedin' 
-  | 'referral' 
-  | 'other';
+export type ReferralSource = 'google_search' | 'linkedin' | 'referral' | 'other';
 
 // Form validation types
 export interface FormErrors {

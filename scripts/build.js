@@ -24,7 +24,8 @@ const CONFIG = {
  */
 function log(message, level = 'info') {
   const timestamp = new Date().toISOString();
-  const prefix = level === 'error' ? '❌' : level === 'warn' ? '⚠️' : level === 'success' ? '✅' : 'ℹ️';
+  const prefix =
+    level === 'error' ? '❌' : level === 'warn' ? '⚠️' : level === 'success' ? '✅' : 'ℹ️';
   console.log(`${prefix} [${timestamp}] ${message}`);
 }
 
@@ -34,10 +35,10 @@ function log(message, level = 'info') {
 function exec(command, options = {}) {
   try {
     log(`Executing: ${command}`);
-    const result = execSync(command, { 
-      stdio: 'inherit', 
+    const result = execSync(command, {
+      stdio: 'inherit',
       encoding: 'utf-8',
-      ...options 
+      ...options,
     });
     return result;
   } catch (error) {
@@ -52,7 +53,7 @@ function exec(command, options = {}) {
  */
 function ensureDirectories() {
   log('Ensuring required directories exist...');
-  
+
   const directories = [
     CONFIG.contentDir,
     path.join(CONFIG.contentDir, 'blog'),
@@ -60,7 +61,7 @@ function ensureDirectories() {
     path.join(CONFIG.contentDir, 'pages'),
     CONFIG.publicDir,
   ];
-  
+
   directories.forEach(dir => {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -74,14 +75,14 @@ function ensureDirectories() {
  */
 function createSampleContent() {
   log('Checking for content files...');
-  
+
   const blogDir = path.join(CONFIG.contentDir, 'blog');
   const caseStudyDir = path.join(CONFIG.contentDir, 'case-studies');
-  
+
   // Check if we need sample content
   const hasBlogPosts = fs.readdirSync(blogDir).some(file => file.endsWith('.md'));
   const hasCaseStudies = fs.readdirSync(caseStudyDir).some(file => file.endsWith('.md'));
-  
+
   if (!hasBlogPosts) {
     log('Creating sample blog post...');
     const samplePost = `---
@@ -110,10 +111,10 @@ We're excited to introduce BorderlessBits, your trusted partner for cloud archit
 
 Ready to transform your technology infrastructure? [Contact us today](/contact/) to discuss your project requirements.
 `;
-    
+
     fs.writeFileSync(path.join(blogDir, 'welcome-to-borderlessbits.md'), samplePost);
   }
-  
+
   if (!hasCaseStudies) {
     log('Creating sample case study...');
     const sampleCaseStudy = `---
@@ -180,7 +181,7 @@ The migration delivered exceptional results:
 
 This project demonstrates our expertise in large-scale cloud migrations and our commitment to delivering measurable business value.
 `;
-    
+
     fs.writeFileSync(path.join(caseStudyDir, 'enterprise-cloud-migration.md'), sampleCaseStudy);
   }
 }
@@ -190,13 +191,13 @@ This project demonstrates our expertise in large-scale cloud migrations and our 
  */
 function generateRobotsTxt() {
   log('Generating robots.txt...');
-  
+
   const robotsTxt = `User-agent: *
 ${CONFIG.nodeEnv === 'production' ? 'Allow: /' : 'Disallow: /'}
 
 Sitemap: ${CONFIG.siteUrl}/sitemap.xml
 `;
-  
+
   fs.writeFileSync(path.join(CONFIG.publicDir, 'robots.txt'), robotsTxt);
   log('Generated robots.txt');
 }
@@ -209,9 +210,9 @@ function generateSitemap() {
     log('Sitemap generation disabled, skipping...');
     return;
   }
-  
+
   log('Generating sitemap.xml...');
-  
+
   // Basic pages
   const pages = [
     { url: '/', priority: '1.0', changefreq: 'weekly' },
@@ -219,7 +220,7 @@ function generateSitemap() {
     { url: '/services/', priority: '0.8', changefreq: 'monthly' },
     { url: '/about/', priority: '0.7', changefreq: 'monthly' },
   ];
-  
+
   // Add blog posts and case studies if they exist
   try {
     const blogDir = path.join(CONFIG.contentDir, 'blog');
@@ -230,11 +231,11 @@ function generateSitemap() {
         pages.push({
           url: `/blog/${slug}/`,
           priority: '0.6',
-          changefreq: 'monthly'
+          changefreq: 'monthly',
         });
       });
     }
-    
+
     const caseStudyDir = path.join(CONFIG.contentDir, 'case-studies');
     if (fs.existsSync(caseStudyDir)) {
       const caseStudyFiles = fs.readdirSync(caseStudyDir).filter(file => file.endsWith('.md'));
@@ -243,24 +244,28 @@ function generateSitemap() {
         pages.push({
           url: `/case-studies/${slug}/`,
           priority: '0.7',
-          changefreq: 'monthly'
+          changefreq: 'monthly',
         });
       });
     }
   } catch (error) {
     log(`Error reading content directories: ${error.message}`, 'warn');
   }
-  
+
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${pages.map(page => `  <url>
+${pages
+  .map(
+    page => `  <url>
     <loc>${CONFIG.siteUrl}${page.url}</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
-  </url>`).join('\n')}
+  </url>`
+  )
+  .join('\n')}
 </urlset>`;
-  
+
   fs.writeFileSync(path.join(CONFIG.publicDir, 'sitemap.xml'), sitemap);
   log(`Generated sitemap.xml with ${pages.length} pages`);
 }
@@ -270,24 +275,24 @@ ${pages.map(page => `  <url>
  */
 function checkEnvironment() {
   log('Checking environment configuration...');
-  
+
   const requiredVars = ['NEXT_PUBLIC_SITE_URL'];
   const missingVars = requiredVars.filter(varName => !process.env[varName]);
-  
+
   if (missingVars.length > 0) {
     log(`Missing required environment variables: ${missingVars.join(', ')}`, 'warn');
     log('Using default values for missing variables', 'warn');
   }
-  
+
   // Optional variables - log warnings if missing in production
   if (CONFIG.nodeEnv === 'production') {
     const optionalVars = [
       'NEXT_PUBLIC_GA_ID',
       'NEXT_PUBLIC_EMAILJS_SERVICE_ID',
       'NEXT_PUBLIC_EMAILJS_TEMPLATE_ID',
-      'NEXT_PUBLIC_EMAILJS_PUBLIC_KEY'
+      'NEXT_PUBLIC_EMAILJS_PUBLIC_KEY',
     ];
-    
+
     const missingOptional = optionalVars.filter(varName => !process.env[varName]);
     if (missingOptional.length > 0) {
       log(`Missing optional environment variables: ${missingOptional.join(', ')}`, 'warn');
@@ -301,10 +306,10 @@ function checkEnvironment() {
  */
 function runBuild() {
   log('Running Next.js build...');
-  
+
   // Run the Next.js build directly to avoid circular reference
   exec('npx next build');
-  
+
   log('Build completed successfully!', 'success');
 }
 
@@ -316,39 +321,35 @@ function postBuildOptimization() {
     log('Output directory not found, skipping post-build optimization', 'warn');
     return;
   }
-  
+
   log('Running post-build optimization...');
-  
+
   // Add .nojekyll for GitHub Pages
   fs.writeFileSync(path.join(CONFIG.outputDir, '.nojekyll'), '');
   log('Added .nojekyll file');
-  
+
   // Add CNAME for custom domain (production only)
   if (CONFIG.nodeEnv === 'production' && CONFIG.siteUrl.includes('borderlessbits.com')) {
     fs.writeFileSync(path.join(CONFIG.outputDir, 'CNAME'), 'borderlessbits.com');
     log('Added CNAME file');
   }
-  
+
   // Validate critical files exist
-  const criticalFiles = [
-    'index.html',
-    '_next/static',
-    'contact/index.html'
-  ];
-  
-  const missingFiles = criticalFiles.filter(file => 
-    !fs.existsSync(path.join(CONFIG.outputDir, file))
+  const criticalFiles = ['index.html', '_next/static', 'contact/index.html'];
+
+  const missingFiles = criticalFiles.filter(
+    file => !fs.existsSync(path.join(CONFIG.outputDir, file))
   );
-  
+
   if (missingFiles.length > 0) {
     log(`Missing critical files: ${missingFiles.join(', ')}`, 'error');
     process.exit(1);
   }
-  
+
   // Log build statistics
   const outputStats = fs.statSync(CONFIG.outputDir);
   log(`Build output ready in: ${CONFIG.outputDir}`, 'success');
-  
+
   // Count files in output
   try {
     exec(`find "${CONFIG.outputDir}" -type f | wc -l`, { stdio: 'pipe' });
@@ -363,7 +364,7 @@ function postBuildOptimization() {
  */
 function main() {
   log('Starting BorderlessBits.com build process...');
-  
+
   try {
     checkEnvironment();
     ensureDirectories();
@@ -372,11 +373,10 @@ function main() {
     generateSitemap();
     runBuild();
     postBuildOptimization();
-    
+
     log('Build process completed successfully! 🎉', 'success');
     log(`Output directory: ${CONFIG.outputDir}`, 'success');
     log(`Site URL: ${CONFIG.siteUrl}`, 'success');
-    
   } catch (error) {
     log(`Build process failed: ${error.message}`, 'error');
     process.exit(1);
@@ -392,5 +392,5 @@ module.exports = {
   main,
   CONFIG,
   log,
-  exec
+  exec,
 };

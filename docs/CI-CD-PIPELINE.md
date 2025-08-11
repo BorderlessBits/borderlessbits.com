@@ -2,7 +2,10 @@
 
 ## Overview
 
-BorderlessBits.com implements a comprehensive CI/CD pipeline that provides enterprise-grade deployment capabilities while maintaining zero-cost operations. The pipeline includes automated quality gates, multi-environment deployments, security scanning, performance monitoring, and automatic failover.
+BorderlessBits.com implements a comprehensive CI/CD pipeline that provides
+enterprise-grade deployment capabilities while maintaining zero-cost operations.
+The pipeline includes automated quality gates, multi-environment deployments,
+security scanning, performance monitoring, and automatic failover.
 
 ## Architecture
 
@@ -16,18 +19,18 @@ graph TB
     F -->|main| G[Production Deploy]
     F -->|develop| H[Staging Deploy]
     F -->|feature| I[Preview Deploy]
-    
+
     G --> J[GitHub Pages]
     G --> K[Netlify Backup]
     G --> L[Post-Deploy Validation]
-    
+
     H --> M[Netlify Staging]
     I --> N[Netlify Preview]
-    
+
     L --> O{Validation Pass?}
     O -->|No| P[Automatic Rollback]
     O -->|Yes| Q[Success Notifications]
-    
+
     R[Monitoring] --> S[Health Checks]
     S --> T{Issues?}
     T -->|Yes| U[Alert & Rollback]
@@ -41,12 +44,14 @@ graph TB
 **File**: `.github/workflows/ci.yml`
 
 **Triggers**:
+
 - Push to `main` or `develop` branches
 - Pull requests to `main` or `develop`
 - Daily scheduled security scans (3 AM UTC)
 - Manual workflow dispatch
 
 **Jobs**:
+
 - **Quality Gates** (parallel execution)
   - ESLint code quality check
   - TypeScript compilation check
@@ -70,10 +75,12 @@ graph TB
 **File**: `.github/workflows/deploy-production.yml`
 
 **Triggers**:
+
 - Push to `main` branch
 - Manual workflow dispatch with force option
 
 **Deployment Strategy**:
+
 1. **Pre-deployment Validation**
    - Critical tests execution
    - Security audit (high/critical vulnerabilities block deployment)
@@ -109,9 +116,11 @@ graph TB
 
 **File**: `.github/workflows/deploy-staging.yml`
 
-**Purpose**: Production-like testing environment for validation before main deployment
+**Purpose**: Production-like testing environment for validation before main
+deployment
 
 **Features**:
+
 - Automatic deployment on `develop` branch pushes
 - Auto-promotion to production with `[auto-promote]` commit message
 - Separate analytics configuration
@@ -122,6 +131,7 @@ graph TB
 **File**: `.github/workflows/preview-deploy.yml`
 
 **Features**:
+
 - Per-PR preview deployments
 - Lighthouse performance audits
 - Visual regression testing
@@ -131,12 +141,14 @@ graph TB
 ## Quality Gates
 
 ### Code Quality
+
 - **ESLint**: Enforces coding standards and catches potential bugs
 - **TypeScript**: Type checking for enhanced reliability
 - **Prettier**: Consistent code formatting
 - **Test Coverage**: Minimum 80% unit test coverage
 
 ### Security
+
 - **Dependency Scanning**: NPM audit for vulnerable packages
 - **Static Analysis**: CodeQL for security vulnerabilities
 - **Secrets Scanning**: TruffleHog and GitLeaks for exposed credentials
@@ -144,8 +156,9 @@ graph TB
 - **Infrastructure Scanning**: Checkov for misconfigurations
 
 ### Performance
+
 - **Bundle Size**: Maximum 2MB total JavaScript
-- **Lighthouse Audits**: 
+- **Lighthouse Audits**:
   - Performance: >80
   - Accessibility: >95
   - Best Practices: >90
@@ -158,6 +171,7 @@ graph TB
 ## Environment Configuration
 
 ### Production
+
 - **Domain**: https://borderlessbits.com
 - **Hosting**: GitHub Pages (primary), Netlify (backup)
 - **Analytics**: Google Analytics 4
@@ -165,6 +179,7 @@ graph TB
 - **Monitoring**: Uptime Robot, GitHub Actions monitoring
 
 ### Staging
+
 - **Domain**: https://staging.borderlessbits.com
 - **Hosting**: Netlify
 - **Analytics**: Separate GA4 property
@@ -172,6 +187,7 @@ graph TB
 - **Auto-promotion**: Available with commit message flag
 
 ### Preview
+
 - **Domain**: https://preview-pr-{number}.netlify.app
 - **Hosting**: Netlify preview deployments
 - **Analytics**: Disabled or staging configuration
@@ -180,12 +196,14 @@ graph TB
 ## Security Implementation
 
 ### Secrets Management
+
 - GitHub repository secrets for sensitive data
 - Environment-specific secret management
 - Automatic secret rotation capabilities
 - Secrets validation in CI/CD pipeline
 
 **Required Secrets**:
+
 ```
 GA_MEASUREMENT_ID           - Google Analytics tracking
 EMAILJS_SERVICE_ID          - Email service configuration
@@ -200,6 +218,7 @@ CODECOV_TOKEN               - Code coverage reporting
 ```
 
 ### Security Scanning
+
 - **Scheduled Scans**: Daily security audits at 2 AM UTC
 - **Dependency Monitoring**: Automated vulnerability detection
 - **Container Security**: Multi-layer container scanning
@@ -209,14 +228,17 @@ CODECOV_TOKEN               - Code coverage reporting
 ## Monitoring & Alerting
 
 ### Health Monitoring
+
 **File**: `.github/workflows/monitoring.yml`
 
 **Schedule**:
+
 - Business hours: Every 5 minutes (9 AM - 6 PM UTC, Mon-Fri)
 - Off-hours: Every 15 minutes
 - Weekends: Every 15 minutes
 
 **Monitoring Checks**:
+
 - **Uptime**: HTTP status and response time
 - **Performance**: Lighthouse audits
 - **SSL Certificates**: Expiration monitoring (30-day warning)
@@ -225,11 +247,13 @@ CODECOV_TOKEN               - Code coverage reporting
 - **Dependencies**: Vulnerability monitoring
 
 ### Alerting Strategy
+
 - **Green Status**: All systems operational
 - **Yellow Status**: Non-critical issues detected
 - **Red Status**: Critical systems down or compromised
 
 ### Integration Points
+
 - GitHub Actions workflow status
 - Email notifications (configurable)
 - Slack/Discord webhooks (configurable)
@@ -238,6 +262,7 @@ CODECOV_TOKEN               - Code coverage reporting
 ## Performance Optimization
 
 ### Build Optimization
+
 - **Static Site Generation**: Next.js static export for optimal performance
 - **Bundle Splitting**: Automatic code splitting for faster loading
 - **Image Optimization**: Next.js Image component with WebP support
@@ -245,6 +270,7 @@ CODECOV_TOKEN               - Code coverage reporting
 - **Tree Shaking**: Unused code elimination
 
 ### Deployment Optimization
+
 - **CDN Integration**: Cloudflare/GitHub Pages CDN
 - **Compression**: Gzip/Brotli compression for assets
 - **Caching Strategy**: Long-term caching for static assets
@@ -252,6 +278,7 @@ CODECOV_TOKEN               - Code coverage reporting
 - **Service Worker**: Offline capability (optional)
 
 ### Monitoring Integration
+
 - **Real User Monitoring**: Core Web Vitals tracking
 - **Performance Budgets**: Automated performance regression detection
 - **Lighthouse CI**: Continuous performance validation
@@ -259,12 +286,15 @@ CODECOV_TOKEN               - Code coverage reporting
 ## Rollback Procedures
 
 ### Automatic Rollback
+
 Triggered automatically when:
+
 - Post-deployment health checks fail
 - Performance thresholds are breached
 - Security vulnerabilities detected in production
 
 **Process**:
+
 1. Detect failure condition
 2. Identify last known good deployment
 3. Restore previous build artifacts
@@ -273,9 +303,11 @@ Triggered automatically when:
 6. Send failure notifications
 
 ### Manual Rollback
+
 **Script**: `scripts/rollback.sh`
 
 **Usage**:
+
 ```bash
 # Rollback to latest backup
 ./scripts/rollback.sh
@@ -288,6 +320,7 @@ Triggered automatically when:
 ```
 
 **Features**:
+
 - Interactive confirmation prompts
 - Backup listing and selection
 - Cross-platform deployment
@@ -297,6 +330,7 @@ Triggered automatically when:
 ## Development Workflow
 
 ### Branching Strategy
+
 ```
 main           ← Production deployments
 develop        ← Staging deployments
@@ -305,6 +339,7 @@ hotfix/*       ← Emergency production fixes
 ```
 
 ### Pull Request Process
+
 1. **Create Feature Branch**: `feature/description`
 2. **Develop & Test**: Local development with Docker
 3. **Create Pull Request**: Against `develop` or `main`
@@ -314,7 +349,9 @@ hotfix/*       ← Emergency production fixes
 7. **Merge & Deploy**: Automatic deployment trigger
 
 ### Local Development
+
 **Docker Setup**: `docker-compose up`
+
 - Hot reloading enabled
 - Volume mounting for instant updates
 - Database integration (if needed)
@@ -325,6 +362,7 @@ hotfix/*       ← Emergency production fixes
 ### Common Issues
 
 **Build Failures**:
+
 ```bash
 # Clear cache and rebuild
 npm run clean
@@ -333,12 +371,14 @@ npm run build
 ```
 
 **Deployment Failures**:
+
 1. Check GitHub Actions logs
 2. Verify secrets configuration
 3. Validate environment variables
 4. Check third-party service status
 
 **Performance Issues**:
+
 ```bash
 # Run performance analysis
 npm run analyze
@@ -346,6 +386,7 @@ npm run lighthouse
 ```
 
 **Security Issues**:
+
 ```bash
 # Run security audit
 npm audit --audit-level moderate
@@ -355,6 +396,7 @@ npm run security-check
 ### Emergency Procedures
 
 **Critical Production Issue**:
+
 1. Execute immediate rollback: `./scripts/rollback.sh -y`
 2. Investigate root cause
 3. Prepare hotfix
@@ -362,6 +404,7 @@ npm run security-check
 5. Post-incident review
 
 **Security Breach**:
+
 1. Rotate all secrets immediately
 2. Execute security rollback
 3. Audit access logs
@@ -371,6 +414,7 @@ npm run security-check
 ## Metrics & Analytics
 
 ### Deployment Metrics
+
 - **Deployment Frequency**: Tracks release cadence
 - **Lead Time**: Code commit to production time
 - **Success Rate**: Percentage of successful deployments
@@ -378,12 +422,14 @@ npm run security-check
 - **Recovery Time**: Time to resolve deployment issues
 
 ### Performance Metrics
+
 - **Core Web Vitals**: LCP, FID, CLS tracking
 - **Lighthouse Scores**: Performance, accessibility, SEO
 - **Bundle Sizes**: JavaScript, CSS, image optimization
 - **Load Times**: First contentful paint, time to interactive
 
 ### Security Metrics
+
 - **Vulnerability Detection**: Time to identify issues
 - **Resolution Time**: Time to patch vulnerabilities
 - **Security Scan Coverage**: Percentage of code scanned
@@ -392,6 +438,7 @@ npm run security-check
 ## Cost Optimization
 
 ### Zero-Cost Architecture
+
 - **GitHub Pages**: 100GB/month bandwidth (free)
 - **Netlify**: 100GB/month bandwidth (free)
 - **GitHub Actions**: 2000 minutes/month (free)
@@ -399,19 +446,22 @@ npm run security-check
 - **Google Analytics**: Unlimited (free)
 
 ### Scaling Triggers
+
 - **Traffic**: >100GB/month → Upgrade to paid tiers
 - **Builds**: >2000 minutes/month → Optimize pipeline or upgrade
 - **Forms**: >100 submissions/month → Netlify Pro ($19/month)
 - **Monitoring**: >50 endpoints → Uptime Robot Pro ($7/month)
 
 ### Enterprise Migration Path
+
 - **Vercel Pro**: $20/month for advanced deployment features
 - **Netlify Pro**: $19/month for enhanced form processing
 - **Custom Infrastructure**: AWS/Azure for full control and compliance
 
 ---
 
-For support and questions about the CI/CD pipeline, contact: richard@borderlessbits.com
+For support and questions about the CI/CD pipeline, contact:
+richard@borderlessbits.com
 
-**Response Time**: Within 24 hours for deployment issues
-**Emergency Contact**: Available for critical production issues
+**Response Time**: Within 24 hours for deployment issues **Emergency Contact**:
+Available for critical production issues

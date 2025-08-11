@@ -1,6 +1,7 @@
 # Deployment Guide
 
-This guide covers deploying BorderlessBits.com using the zero-cost architecture design.
+This guide covers deploying BorderlessBits.com using the zero-cost architecture
+design.
 
 ## 🎯 Deployment Overview
 
@@ -8,7 +9,8 @@ The website uses a comprehensive zero-cost deployment strategy:
 
 - **Primary Hosting**: GitHub Pages (100GB/month bandwidth)
 - **Backup Hosting**: Netlify (100GB/month bandwidth)
-- **Form Processing**: Netlify Forms (100 submissions/month) + EmailJS fallback (200 emails/month)
+- **Form Processing**: Netlify Forms (100 submissions/month) + EmailJS fallback
+  (200 emails/month)
 - **Analytics**: Google Analytics 4 (free tier)
 - **Monitoring**: Uptime Robot (50 monitors free)
 
@@ -34,13 +36,13 @@ The website uses a comprehensive zero-cost deployment strategy:
 
 Navigate to repository **Settings → Secrets and variables → Actions** and add:
 
-| Secret Name | Description | Example |
-|-------------|-------------|---------|
-| `GA_MEASUREMENT_ID` | Google Analytics 4 ID | `G-XXXXXXXXXX` |
-| `EMAILJS_SERVICE_ID` | EmailJS service identifier | `service_xxxxxxx` |
-| `EMAILJS_TEMPLATE_ID` | EmailJS template ID | `template_xxxxxxx` |
-| `EMAILJS_PUBLIC_KEY` | EmailJS public key | `xxxxxxxxxx` |
-| `LHCI_GITHUB_APP_TOKEN` | Lighthouse CI token (optional) | `xxxxxxxxxx` |
+| Secret Name             | Description                    | Example            |
+| ----------------------- | ------------------------------ | ------------------ |
+| `GA_MEASUREMENT_ID`     | Google Analytics 4 ID          | `G-XXXXXXXXXX`     |
+| `EMAILJS_SERVICE_ID`    | EmailJS service identifier     | `service_xxxxxxx`  |
+| `EMAILJS_TEMPLATE_ID`   | EmailJS template ID            | `template_xxxxxxx` |
+| `EMAILJS_PUBLIC_KEY`    | EmailJS public key             | `xxxxxxxxxx`       |
+| `LHCI_GITHUB_APP_TOKEN` | Lighthouse CI token (optional) | `xxxxxxxxxx`       |
 
 ### Step 3: Enable GitHub Pages
 
@@ -90,8 +92,14 @@ CNAME www.borderlessbits.com borderlessbits.com
 ### Netlify Forms Configuration
 
 Add the following to your contact page HTML:
+
 ```html
-<form name="contact" method="POST" data-netlify="true" data-netlify-recaptcha="true">
+<form
+  name="contact"
+  method="POST"
+  data-netlify="true"
+  data-netlify-recaptcha="true"
+>
   <input type="hidden" name="form-name" value="contact" />
   <!-- Your form fields -->
   <div data-netlify-recaptcha="true"></div>
@@ -117,6 +125,7 @@ Add the following to your contact page HTML:
 ### Template Configuration
 
 **Contact Template** (for notifications):
+
 ```
 Subject: New Contact Form Submission - {{project_type}}
 
@@ -135,6 +144,7 @@ Submitted: {{submission_date}}
 ```
 
 **Auto-Reply Template** (for confirmations):
+
 ```
 Subject: Thank you for contacting BorderlessBits
 
@@ -163,25 +173,28 @@ richard@borderlessbits.com
    gtag('config', 'GA_MEASUREMENT_ID', {
      anonymize_ip: true,
      allow_ad_personalization_signals: false,
-     allow_google_signals: false
+     allow_google_signals: false,
    });
    ```
 
 ### Enhanced Ecommerce Setup
 
 Track lead values for ROI analysis:
+
 ```javascript
 gtag('event', 'purchase', {
   transaction_id: 'lead_' + Date.now(),
   value: 25000, // Estimated contract value
   currency: 'USD',
-  items: [{
-    item_id: 'consultation_lead',
-    item_name: 'Consultation Lead',
-    category: 'leads',
-    quantity: 1,
-    price: 25000
-  }]
+  items: [
+    {
+      item_id: 'consultation_lead',
+      item_name: 'Consultation Lead',
+      category: 'leads',
+      quantity: 1,
+      price: 25000,
+    },
+  ],
 });
 ```
 
@@ -212,8 +225,9 @@ gtag('event', 'purchase', {
 ### Core Web Vitals Monitoring
 
 Monitor performance metrics automatically:
+
 - **LCP**: < 2.5 seconds
-- **FID**: < 100 milliseconds  
+- **FID**: < 100 milliseconds
 - **CLS**: < 0.1
 
 ## 🔐 Security Configuration
@@ -221,21 +235,23 @@ Monitor performance metrics automatically:
 ### Security Headers
 
 Configured automatically via `next.config.js`:
+
 ```javascript
 headers: [
   {
     key: 'X-Frame-Options',
-    value: 'SAMEORIGIN'
+    value: 'SAMEORIGIN',
   },
   {
-    key: 'X-Content-Type-Options', 
-    value: 'nosniff'
+    key: 'X-Content-Type-Options',
+    value: 'nosniff',
   },
   {
     key: 'Content-Security-Policy',
-    value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.google-analytics.com"
-  }
-]
+    value:
+      "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.google-analytics.com",
+  },
+];
 ```
 
 ### Form Security
@@ -286,6 +302,7 @@ headers: [
 ### Common Issues
 
 **Build Fails**
+
 ```bash
 # Check Node.js version
 node --version  # Should be 18+
@@ -297,6 +314,7 @@ npm run build
 ```
 
 **Form Not Submitting**
+
 ```bash
 # Check EmailJS configuration
 console.log('EmailJS Config:', {
@@ -307,12 +325,14 @@ console.log('EmailJS Config:', {
 ```
 
 **Site Not Loading**
+
 1. Check GitHub Pages status
 2. Verify DNS configuration
 3. Check SSL certificate status
 4. Review deployment logs
 
 **Performance Issues**
+
 ```bash
 # Run performance audit
 npm run lighthouse
@@ -344,24 +364,29 @@ The GitHub Actions workflow automatically:
 ### Traffic Growth Triggers
 
 **100GB/month exceeded (GitHub Pages)**
+
 - **Solution**: Migrate to Netlify (100GB free) or Vercel
 - **Cost**: $0 (still within free tiers)
 
 **100 form submissions/month exceeded**
+
 - **Solution**: Upgrade to Netlify Pro ($19/month) or Formspree Pro ($10/month)
 - **Alternative**: Custom serverless solution (~$5/month)
 
 **Performance degradation**
+
 - **Solution**: Cloudflare Pro ($20/month) for advanced CDN
 - **Alternative**: AWS CloudFront with Lambda@Edge
 
 ### Enterprise Migration Path
 
 When ready for enterprise features:
+
 1. **Vercel Pro** ($20/month): Advanced deployment features
-2. **Netlify Pro** ($19/month): Enhanced form processing and analytics  
+2. **Netlify Pro** ($19/month): Enhanced form processing and analytics
 3. **Custom AWS/Azure**: Full control and compliance features
 
 ---
 
-For deployment support, contact richard@borderlessbits.com with response within 24 hours.
+For deployment support, contact richard@borderlessbits.com with response within
+24 hours.

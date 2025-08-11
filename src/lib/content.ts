@@ -22,7 +22,7 @@ const processor = remark()
  */
 function ensureContentDirectories(): void {
   const directories = [CONTENT_DIR, POSTS_DIR, CASE_STUDIES_DIR, PAGES_DIR];
-  
+
   directories.forEach(dir => {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -39,9 +39,8 @@ function getMarkdownFiles(directory: string): string[] {
     if (!fs.existsSync(directory)) {
       return [];
     }
-    
-    return fs.readdirSync(directory)
-      .filter(file => file.endsWith('.md') || file.endsWith('.mdx'));
+
+    return fs.readdirSync(directory).filter(file => file.endsWith('.md') || file.endsWith('.mdx'));
   } catch (error) {
     console.error(`Error reading directory ${directory}:`, error);
     return [];
@@ -76,19 +75,19 @@ async function parseMarkdownFile(filePath: string): Promise<{
   try {
     const fileContent = fs.readFileSync(filePath, 'utf8');
     const { data, content } = matter(fileContent);
-    
+
     // Generate slug from filename
     const slug = path.basename(filePath, path.extname(filePath));
-    
+
     // Process markdown to HTML
     const processedContent = await processMarkdown(content);
-    
+
     // Validate required metadata
     if (!data.title || !data.date) {
       console.warn(`Missing required metadata in ${filePath}`);
       return null;
     }
-    
+
     const metadata: PostMetadata = {
       title: data.title,
       description: data.description || '',
@@ -102,7 +101,7 @@ async function parseMarkdownFile(filePath: string): Promise<{
         canonical_url: data.seo?.canonical_url,
       },
     };
-    
+
     return {
       metadata,
       content: processedContent,
@@ -119,14 +118,14 @@ async function parseMarkdownFile(filePath: string): Promise<{
  */
 export async function getAllPosts(): Promise<Post[]> {
   ensureContentDirectories();
-  
+
   const files = getMarkdownFiles(POSTS_DIR);
   const posts: Post[] = [];
-  
+
   for (const file of files) {
     const filePath = path.join(POSTS_DIR, file);
     const parsed = await parseMarkdownFile(filePath);
-    
+
     if (parsed) {
       const post: Post = {
         ...parsed.metadata,
@@ -134,11 +133,11 @@ export async function getAllPosts(): Promise<Post[]> {
         content: parsed.content,
         readingTime: calculateReadingTime(parsed.content),
       };
-      
+
       posts.push(post);
     }
   }
-  
+
   // Sort posts by date (newest first)
   return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
@@ -148,17 +147,17 @@ export async function getAllPosts(): Promise<Post[]> {
  */
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   const filePath = path.join(POSTS_DIR, `${slug}.md`);
-  
+
   if (!fs.existsSync(filePath)) {
     return null;
   }
-  
+
   const parsed = await parseMarkdownFile(filePath);
-  
+
   if (!parsed) {
     return null;
   }
-  
+
   return {
     ...parsed.metadata,
     slug: parsed.slug,
@@ -180,10 +179,8 @@ export async function getFeaturedPosts(limit: number = 3): Promise<Post[]> {
  */
 export async function getPostsByTag(tag: string): Promise<Post[]> {
   const allPosts = await getAllPosts();
-  return allPosts.filter(post => 
-    post.tags.some(postTag => 
-      postTag.toLowerCase() === tag.toLowerCase()
-    )
+  return allPosts.filter(post =>
+    post.tags.some(postTag => postTag.toLowerCase() === tag.toLowerCase())
   );
 }
 
@@ -193,11 +190,11 @@ export async function getPostsByTag(tag: string): Promise<Post[]> {
 export async function getAllTags(): Promise<string[]> {
   const allPosts = await getAllPosts();
   const tagSet = new Set<string>();
-  
+
   allPosts.forEach(post => {
     post.tags.forEach(tag => tagSet.add(tag));
   });
-  
+
   return Array.from(tagSet).sort();
 }
 
@@ -206,18 +203,18 @@ export async function getAllTags(): Promise<string[]> {
  */
 export async function getAllCaseStudies(): Promise<CaseStudy[]> {
   ensureContentDirectories();
-  
+
   const files = getMarkdownFiles(CASE_STUDIES_DIR);
   const caseStudies: CaseStudy[] = [];
-  
+
   for (const file of files) {
     const filePath = path.join(CASE_STUDIES_DIR, file);
     const parsed = await parseMarkdownFile(filePath);
-    
+
     if (parsed) {
       const fileContent = fs.readFileSync(filePath, 'utf8');
       const { data } = matter(fileContent);
-      
+
       const caseStudy: CaseStudy = {
         ...parsed.metadata,
         slug: parsed.slug,
@@ -230,11 +227,11 @@ export async function getAllCaseStudies(): Promise<CaseStudy[]> {
         technologies: Array.isArray(data.technologies) ? data.technologies : [],
         timeline: data.timeline || '',
       };
-      
+
       caseStudies.push(caseStudy);
     }
   }
-  
+
   // Sort case studies by date (newest first)
   return caseStudies.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
@@ -244,19 +241,19 @@ export async function getAllCaseStudies(): Promise<CaseStudy[]> {
  */
 export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
   const filePath = path.join(CASE_STUDIES_DIR, `${slug}.md`);
-  
+
   if (!fs.existsSync(filePath)) {
     return null;
   }
-  
+
   const fileContent = fs.readFileSync(filePath, 'utf8');
   const { data } = matter(fileContent);
   const parsed = await parseMarkdownFile(filePath);
-  
+
   if (!parsed) {
     return null;
   }
-  
+
   return {
     ...parsed.metadata,
     slug: parsed.slug,
@@ -287,17 +284,17 @@ export async function getPageBySlug(slug: string): Promise<{
   content: string;
 } | null> {
   const filePath = path.join(PAGES_DIR, `${slug}.md`);
-  
+
   if (!fs.existsSync(filePath)) {
     return null;
   }
-  
+
   const parsed = await parseMarkdownFile(filePath);
-  
+
   if (!parsed) {
     return null;
   }
-  
+
   return {
     metadata: parsed.metadata,
     content: parsed.content,
@@ -314,28 +311,23 @@ export async function searchContent(
   posts: Post[];
   caseStudies: CaseStudy[];
 }> {
-  const [allPosts, allCaseStudies] = await Promise.all([
-    getAllPosts(),
-    getAllCaseStudies(),
-  ]);
-  
+  const [allPosts, allCaseStudies] = await Promise.all([getAllPosts(), getAllCaseStudies()]);
+
   const normalizedQuery = query.toLowerCase();
-  
+
   const matchesQuery = (item: Post | CaseStudy): boolean => {
     const titleMatch = item.title.toLowerCase().includes(normalizedQuery);
     const descriptionMatch = item.description.toLowerCase().includes(normalizedQuery);
-    const tagMatch = item.tags.some(tag => 
-      tag.toLowerCase().includes(normalizedQuery)
-    );
-    
+    const tagMatch = item.tags.some(tag => tag.toLowerCase().includes(normalizedQuery));
+
     if (!includeContent) {
       return titleMatch || descriptionMatch || tagMatch;
     }
-    
+
     const contentMatch = item.content.toLowerCase().includes(normalizedQuery);
     return titleMatch || descriptionMatch || tagMatch || contentMatch;
   };
-  
+
   return {
     posts: allPosts.filter(matchesQuery),
     caseStudies: allCaseStudies.filter(matchesQuery),
@@ -350,10 +342,9 @@ export async function generateRSSData(): Promise<{
   lastModified: string;
 }> {
   const posts = await getAllPosts();
-  const lastModified = posts.length > 0 
-    ? new Date(posts[0].date).toISOString()
-    : new Date().toISOString();
-  
+  const lastModified =
+    posts.length > 0 ? new Date(posts[0].date).toISOString() : new Date().toISOString();
+
   return {
     posts: posts.slice(0, 20), // Latest 20 posts
     lastModified,
@@ -368,13 +359,10 @@ export async function generateSitemapData(): Promise<{
   caseStudies: string[];
   lastModified: string;
 }> {
-  const [posts, caseStudies] = await Promise.all([
-    getAllPosts(),
-    getAllCaseStudies(),
-  ]);
-  
+  const [posts, caseStudies] = await Promise.all([getAllPosts(), getAllCaseStudies()]);
+
   const lastModified = new Date().toISOString();
-  
+
   return {
     posts: posts.map(post => post.slug),
     caseStudies: caseStudies.map(cs => cs.slug),
@@ -387,7 +375,7 @@ export async function generateSitemapData(): Promise<{
  */
 export async function createSampleContent(): Promise<void> {
   ensureContentDirectories();
-  
+
   // Sample blog post
   const samplePost = `---
 title: "Getting Started with Cloud Architecture"
@@ -496,15 +484,14 @@ This project demonstrates our expertise in healthcare technology modernization a
   // Write sample files
   const postPath = path.join(POSTS_DIR, 'getting-started-with-cloud-architecture.md');
   const caseStudyPath = path.join(CASE_STUDIES_DIR, 'healthcare-platform-modernization.md');
-  
+
   if (!fs.existsSync(postPath)) {
     fs.writeFileSync(postPath, samplePost);
     console.log('Created sample blog post');
   }
-  
+
   if (!fs.existsSync(caseStudyPath)) {
     fs.writeFileSync(caseStudyPath, sampleCaseStudy);
     console.log('Created sample case study');
   }
 }
-

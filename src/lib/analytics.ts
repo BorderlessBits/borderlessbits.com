@@ -48,7 +48,7 @@ export function initializeGA(): void {
 
   // Initialize dataLayer
   window.dataLayer = window.dataLayer || [];
-  window.gtag = function(...args: any[]) {
+  window.gtag = function (...args: any[]) {
     window.dataLayer.push(args);
   };
 
@@ -140,10 +140,7 @@ export function trackFormSubmission(
 /**
  * Track business conversions (leads)
  */
-export function trackConversion(
-  conversionType: string,
-  conversionValue?: string
-): void {
+export function trackConversion(conversionType: string, conversionValue?: string): void {
   if (!isAnalyticsEnabled()) return;
 
   window.gtag('event', 'conversion', {
@@ -168,9 +165,7 @@ export function trackWebVital(metric: WebVital): void {
   window.gtag('event', metric.name, {
     event_category: 'Web Vitals',
     // Use a custom metric to avoid sampling
-    custom_parameter_value: Math.round(
-      metric.name === 'CLS' ? metric.value * 1000 : metric.value
-    ),
+    custom_parameter_value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
     event_label: metric.id,
     non_interaction: true,
   });
@@ -181,10 +176,7 @@ export function trackWebVital(metric: WebVital): void {
 /**
  * Track user engagement events
  */
-export function trackEngagement(
-  engagementType: string,
-  details?: Record<string, any>
-): void {
+export function trackEngagement(engagementType: string, details?: Record<string, any>): void {
   if (!isAnalyticsEnabled()) return;
 
   window.gtag('event', 'engagement', {
@@ -277,10 +269,7 @@ export function trackTiming(
 /**
  * Track exceptions and errors
  */
-export function trackException(
-  description: string,
-  fatal: boolean = false
-): void {
+export function trackException(description: string, fatal: boolean = false): void {
   if (!isAnalyticsEnabled()) return;
 
   window.gtag('event', 'exception', {
@@ -298,7 +287,7 @@ export function isAnalyticsEnabled(): boolean {
   if (typeof window === 'undefined') return false;
   if (!GA_MEASUREMENT_ID) return false;
   if (!window.gtag) return false;
-  
+
   return getAnalyticsConsent();
 }
 
@@ -355,13 +344,15 @@ export function trackLeadValue(
     transaction_id: `lead_${Date.now()}`,
     value: estimatedValue,
     currency: 'USD',
-    items: [{
-      item_id: 'lead_generation',
-      item_name: 'Potential Client Lead',
-      category: 'leads',
-      quantity: 1,
-      price: estimatedValue,
-    }],
+    items: [
+      {
+        item_id: 'lead_generation',
+        item_name: 'Potential Client Lead',
+        category: 'leads',
+        quantity: 1,
+        price: estimatedValue,
+      },
+    ],
     custom_parameters: {
       lead_source: leadSource,
       lead_type: 'contact_form',
@@ -422,10 +413,13 @@ export class PerformanceMonitor {
   private sendVitalsBatch(): void {
     if (!isAnalyticsEnabled()) return;
 
-    const vitalsData = this.vitalsBuffer.reduce((acc, vital) => {
-      acc[vital.name] = vital.value;
-      return acc;
-    }, {} as Record<string, number>);
+    const vitalsData = this.vitalsBuffer.reduce(
+      (acc, vital) => {
+        acc[vital.name] = vital.value;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     window.gtag('event', 'web_vitals_batch', {
       event_category: 'performance',

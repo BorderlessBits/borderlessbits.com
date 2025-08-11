@@ -5,9 +5,9 @@ name: Build and Deploy BorderlessBits.com
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   schedule:
     # Run weekly dependency updates and security checks
     - cron: '0 2 * * 0'
@@ -22,7 +22,7 @@ jobs:
   quality-check:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -84,12 +84,12 @@ jobs:
     needs: quality-check
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    
+
     strategy:
       matrix:
         # Test multiple Node.js versions in development
         node-version: ${{ github.ref == 'refs/heads/main' && '[20]' || '[20, 22]' }}
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -144,7 +144,7 @@ jobs:
           npm run build
           npx serve out -l 3001 &
           sleep 5
-          
+
           # Run Lighthouse
           lhci autorun --config=lighthouserc.json || echo "Lighthouse CI failed but continuing..."
         env:
@@ -185,18 +185,18 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     # Grant GITHUB_TOKEN permissions for deployment
     permissions:
       contents: read
       pages: write
       id-token: write
-    
+
     # Deploy to production environment
     environment:
       name: production
       url: ${{ steps.deployment.outputs.page_url }}
-    
+
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -214,18 +214,18 @@ jobs:
         run: |
           # Add .nojekyll to prevent Jekyll processing
           touch out/.nojekyll
-          
+
           # Add CNAME file for custom domain
           echo "borderlessbits.com" > out/CNAME
-          
+
           # Add robots.txt
           cat > out/robots.txt << EOF
           User-agent: *
           Allow: /
-          
+
           Sitemap: https://borderlessbits.com/sitemap.xml
           EOF
-          
+
           # Verify critical files exist
           test -f out/index.html || (echo "ERROR: index.html not found" && exit 1)
 
@@ -244,7 +244,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
       - name: Wait for deployment to be available
         run: sleep 30
@@ -252,26 +252,26 @@ jobs:
       - name: Check site availability
         run: |
           echo "Checking site availability..."
-          
+
           # Check main pages
           curl -f -s -o /dev/null https://borderlessbits.com || (echo "ERROR: Homepage not accessible" && exit 1)
           curl -f -s -o /dev/null https://borderlessbits.com/contact/ || (echo "ERROR: Contact page not accessible" && exit 1)
-          
+
           # Check for proper redirects
           curl -s -I https://borderlessbits.com | grep -q "200 OK" || (echo "ERROR: Homepage not returning 200" && exit 1)
-          
+
           # Check critical assets
           curl -f -s -o /dev/null https://borderlessbits.com/_next/static/ || echo "WARNING: Static assets may not be available"
-          
+
           echo "✓ Site is accessible and responding correctly"
 
       - name: Run basic SEO checks
         run: |
           echo "Running basic SEO checks..."
-          
+
           # Check for meta tags and structured data
           PAGE_CONTENT=$(curl -s https://borderlessbits.com)
-          
+
           echo "$PAGE_CONTENT" | grep -q "<title>" && echo "✓ Title tag found" || echo "⚠ Title tag missing"
           echo "$PAGE_CONTENT" | grep -q 'name="description"' && echo "✓ Meta description found" || echo "⚠ Meta description missing"
           echo "$PAGE_CONTENT" | grep -q 'application/ld+json' && echo "✓ Structured data found" || echo "⚠ Structured data missing"
@@ -280,11 +280,11 @@ jobs:
       - name: Performance check with curl timing
         run: |
           echo "Checking page load performance..."
-          
+
           # Measure page load time
           TIME=$(curl -o /dev/null -s -w '%{time_total}' https://borderlessbits.com)
           echo "Page load time: ${TIME}s"
-          
+
           # Check if load time is reasonable (under 5 seconds)
           if (( $(echo "$TIME > 5.0" | bc -l) )); then
             echo "⚠ Page load time is slower than expected"
@@ -312,7 +312,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || contains(github.event.head_commit.message, '[security-scan]')
     timeout-minutes: 15
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -339,12 +339,12 @@ jobs:
             snyk-results.json
           retention-days: 30
 
-# Cleanup old workflow runs
+  # Cleanup old workflow runs
   cleanup:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule'
     timeout-minutes: 5
-    
+
     steps:
       - name: Delete old workflow runs
         uses: actions/github-script@v7
@@ -355,10 +355,10 @@ jobs:
               repo: context.repo.repo,
               per_page: 100
             });
-            
+
             const cutoff = new Date();
             cutoff.setDate(cutoff.getDate() - 30); // Keep runs for 30 days
-            
+
             for (const run of runs.workflow_runs) {
               if (new Date(run.created_at) < cutoff && run.status === 'completed') {
                 await github.rest.actions.deleteWorkflowRun({

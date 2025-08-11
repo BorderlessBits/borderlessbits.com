@@ -3,13 +3,13 @@ const nextConfig = {
   // Enable static site generation for zero-cost hosting
   output: 'export',
   trailingSlash: true,
-  
+
   // Disable image optimization for static export
   images: {
     unoptimized: true,
-    formats: ['image/webp', 'image/avif']
+    formats: ['image/webp', 'image/avif'],
   },
-  
+
   // Configure security headers
   async headers() {
     return [
@@ -19,23 +19,23 @@ const nextConfig = {
           // Security headers
           {
             key: 'X-DNS-Prefetch-Control',
-            value: 'on'
+            value: 'on',
           },
           {
             key: 'X-XSS-Protection',
-            value: '1; mode=block'
+            value: '1; mode=block',
           },
           {
             key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
+            value: 'SAMEORIGIN',
           },
           {
             key: 'X-Content-Type-Options',
-            value: 'nosniff'
+            value: 'nosniff',
           },
           {
             key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin'
+            value: 'origin-when-cross-origin',
           },
           // Content Security Policy
           {
@@ -49,19 +49,19 @@ const nextConfig = {
               "connect-src 'self' https://www.google-analytics.com https://api.emailjs.com https://vitals.vercel-insights.com",
               "frame-src 'none'",
               "object-src 'none'",
-              "base-uri 'self'"
-            ].join('; ')
-          }
-        ]
-      }
+              "base-uri 'self'",
+            ].join('; '),
+          },
+        ],
+      },
     ];
   },
-  
+
   // Optimize for production
   swcMinify: true,
   poweredByHeader: false,
   reactStrictMode: true,
-  
+
   // Configure redirects for SEO
   async redirects() {
     return [
@@ -69,18 +69,19 @@ const nextConfig = {
         source: '/home',
         destination: '/',
         permanent: true,
-      }
+      },
     ];
   },
-  
+
   // Environment variables
   env: {
     SITE_NAME: 'BorderlessBits',
-    SITE_URL: process.env.NODE_ENV === 'production' 
-      ? 'https://borderlessbits.com' 
-      : 'http://localhost:3000'
+    SITE_URL:
+      process.env.NODE_ENV === 'production'
+        ? 'https://borderlessbits.com'
+        : 'http://localhost:3000',
   },
-  
+
   // Experimental features (disabled for compatibility)
   // experimental: {
   //   optimizeCss: true,
@@ -89,7 +90,7 @@ const nextConfig = {
 
 // Bundle analyzer configuration for performance monitoring
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true'
+  enabled: process.env.ANALYZE === 'true',
 });
 
 module.exports = withBundleAnalyzer(nextConfig);

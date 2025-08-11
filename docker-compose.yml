@@ -12,7 +12,7 @@ services:
       target: development
     container_name: borderlessbits-dev
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       # Hot reloading support
       - ./src:/app/src
@@ -32,11 +32,11 @@ services:
       - NEXT_PUBLIC_EMAILJS_SERVICE_ID=${EMAILJS_SERVICE_ID:-}
       - NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=${EMAILJS_TEMPLATE_ID:-}
       - NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=${EMAILJS_PUBLIC_KEY:-}
-      - CHOKIDAR_USEPOLLING=true  # For file watching on Windows
+      - CHOKIDAR_USEPOLLING=true # For file watching on Windows
       - WATCHPACK_POLLING=true
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -54,7 +54,7 @@ services:
       target: production
     container_name: borderlessbits-prod-preview
     ports:
-      - "8080:80"
+      - '8080:80'
     environment:
       - NODE_ENV=production
     restart: unless-stopped
@@ -141,8 +141,8 @@ services:
     image: nginx:alpine
     container_name: borderlessbits-nginx
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - ./docker/nginx-dev.conf:/etc/nginx/nginx.conf
       - ./docker/ssl:/etc/nginx/ssl

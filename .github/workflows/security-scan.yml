@@ -2,9 +2,9 @@ name: 🔒 Security Scanning
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   schedule:
     # Daily security scan at 2 AM UTC
     - cron: '0 2 * * *'
@@ -33,33 +33,33 @@ jobs:
   # ==========================================
   # DEPENDENCY VULNERABILITY SCANNING
   # ==========================================
-  
+
   dependency-scan:
     name: 📦 Dependency Vulnerability Scan
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: ⚡ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          
+
       - name: 📦 Install dependencies
         run: npm ci --prefer-offline --no-audit
-        
+
       - name: 🔍 NPM Security Audit
         id: npm_audit
         run: |
           echo "Running NPM security audit..."
-          
+
           # Run audit and capture results
           npm audit --audit-level info --json > audit-results.json || true
-          
+
           # Parse results
           if [ -f "audit-results.json" ]; then
             CRITICAL=$(jq '.metadata.vulnerabilities.critical // 0' audit-results.json)
@@ -93,7 +93,7 @@ jobs:
           else
             echo "No audit results generated"
           fi
-          
+
       - name: 🔍 Trivy Filesystem Scan
         uses: aquasecurity/trivy-action@master
         with:
@@ -102,13 +102,13 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH,MEDIUM'
-          
+
       - name: 📤 Upload Trivy results to GitHub Security
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
-          
+
       - name: 📊 Upload vulnerability artifacts
         uses: actions/upload-artifact@v4
         if: always()
@@ -122,18 +122,18 @@ jobs:
   # ==========================================
   # SECRETS SCANNING
   # ==========================================
-  
+
   secrets-scan:
     name: 🔐 Secrets Scanning
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
       - name: 🔍 TruffleHog Secrets Scan
         uses: trufflesecurity/trufflehog@main
         with:
@@ -141,7 +141,7 @@ jobs:
           base: main
           head: HEAD
           extra_args: --debug --only-verified
-          
+
       - name: 🔍 GitLeaks Secrets Scan
         uses: gitleaks/gitleaks-action@v2
         env:
@@ -151,53 +151,53 @@ jobs:
   # ==========================================
   # SAST (STATIC APPLICATION SECURITY TESTING)
   # ==========================================
-  
+
   sast-scan:
     name: 🔬 Static Application Security Testing
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    
+
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript' ]
-        
+        language: ['javascript']
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 🔍 Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           queries: security-extended,security-and-quality
-          
+
       - name: 🏗️ Autobuild
         uses: github/codeql-action/autobuild@v3
-        
+
       - name: 📊 Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:${{matrix.language}}"
-          
+          category: '/language:${{matrix.language}}'
+
   # ==========================================
   # CONTAINER SECURITY SCANNING
   # ==========================================
-  
+
   container-scan:
     name: 🐳 Container Security Scan
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: github.event.inputs.full_scan == 'true' || github.event_name == 'schedule'
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 🐳 Build Docker image
         run: |
           docker build -t borderlessbits:security-scan .
-          
+
       - name: 🔍 Trivy Container Scan
         uses: aquasecurity/trivy-action@master
         with:
@@ -205,7 +205,7 @@ jobs:
           format: 'sarif'
           output: 'container-results.sarif'
           severity: 'CRITICAL,HIGH'
-          
+
       - name: 📤 Upload Container Scan Results
         uses: github/codeql-action/upload-sarif@v3
         if: always()
@@ -215,17 +215,17 @@ jobs:
   # ==========================================
   # INFRASTRUCTURE SECURITY SCAN
   # ==========================================
-  
+
   infrastructure-scan:
     name: 🏗️ Infrastructure Security Scan
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: github.event.inputs.full_scan == 'true' || github.event_name == 'schedule'
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 🔍 Checkov Infrastructure Scan
         uses: bridgecrewio/checkov-action@master
         with:
@@ -233,7 +233,7 @@ jobs:
           framework: dockerfile,github_actions,secrets
           output_format: sarif
           output_file_path: reports/checkov-results.sarif
-          
+
       - name: 📤 Upload Infrastructure Scan Results
         uses: github/codeql-action/upload-sarif@v3
         if: always()
@@ -243,45 +243,45 @@ jobs:
   # ==========================================
   # SECURITY HEADERS VALIDATION
   # ==========================================
-  
+
   security-headers-scan:
     name: 🛡️ Security Headers Validation
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: ⚡ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          
+
       - name: 📦 Install dependencies
         run: npm ci --prefer-offline --no-audit
-        
+
       - name: 🏗️ Build application
         run: npm run build
         env:
           NODE_ENV: production
-          
+
       - name: 🖥️ Start local server
         run: npx serve out -l 3000 &
-        
+
       - name: ⏳ Wait for server
         run: |
           npm install -g wait-on
           wait-on http://localhost:3000 --timeout 60000
-        
+
       - name: 🛡️ Security Headers Test
         run: |
           echo "Testing security headers..."
-          
+
           # Test multiple pages
           PAGES=("/" "/contact")
-          
+
           for page in "${PAGES[@]}"; do
             echo "Testing $page..."
             
@@ -320,7 +320,7 @@ jobs:
             
             echo ""
           done
-          
+
       - name: 🔍 OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.10.0
         with:
@@ -332,38 +332,38 @@ jobs:
   # ==========================================
   # DEPENDENCY LICENSE SCANNING
   # ==========================================
-  
+
   license-scan:
     name: 📜 License Compliance Scan
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: ⚡ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          
+
       - name: 📦 Install dependencies
         run: npm ci --prefer-offline --no-audit
-        
+
       - name: 📜 License check
         run: |
           echo "Checking dependency licenses..."
-          
+
           # Install license checker
           npm install -g license-checker
-          
+
           # Generate license report
           license-checker --json --out licenses.json
-          
+
           # Check for problematic licenses
           PROBLEMATIC_LICENSES=("GPL-3.0" "AGPL-3.0" "LGPL-3.0")
-          
+
           if [ -f "licenses.json" ]; then
             echo "## 📜 License Compliance Report" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
@@ -383,7 +383,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "**Total packages scanned**: $TOTAL_PACKAGES" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
       - name: 📤 Upload license report
         uses: actions/upload-artifact@v4
         with:
@@ -394,39 +394,39 @@ jobs:
   # ==========================================
   # SECURITY REPORT AGGREGATION
   # ==========================================
-  
+
   security-report:
     name: 📊 Security Report
     runs-on: ubuntu-latest
     needs: [dependency-scan, secrets-scan, sast-scan, security-headers-scan, license-scan]
     if: always()
-    
+
     steps:
       - name: 📊 Aggregate security results
         id: aggregate
         run: |
           echo "Aggregating security scan results..."
-          
+
           # Initialize counters
           CRITICAL_ISSUES=0
           HIGH_ISSUES=0
           MODERATE_ISSUES=0
           TOTAL_ISSUES=0
-          
+
           # Check dependency scan results
           if [ "${{ needs.dependency-scan.outputs.critical }}" != "" ]; then
             CRITICAL_ISSUES=$((CRITICAL_ISSUES + ${{ needs.dependency-scan.outputs.critical }}))
             HIGH_ISSUES=$((HIGH_ISSUES + ${{ needs.dependency-scan.outputs.high }}))
             MODERATE_ISSUES=$((MODERATE_ISSUES + ${{ needs.dependency-scan.outputs.moderate }}))
           fi
-          
+
           TOTAL_ISSUES=$((CRITICAL_ISSUES + HIGH_ISSUES + MODERATE_ISSUES))
-          
+
           echo "critical=$CRITICAL_ISSUES" >> $GITHUB_OUTPUT
           echo "high=$HIGH_ISSUES" >> $GITHUB_OUTPUT
           echo "moderate=$MODERATE_ISSUES" >> $GITHUB_OUTPUT
           echo "total=$TOTAL_ISSUES" >> $GITHUB_OUTPUT
-          
+
           # Determine overall security status
           if [ $CRITICAL_ISSUES -gt 0 ]; then
             echo "status=critical" >> $GITHUB_OUTPUT
@@ -441,7 +441,7 @@ jobs:
             echo "status=clean" >> $GITHUB_OUTPUT
             echo "message=No significant security issues found" >> $GITHUB_OUTPUT
           fi
-          
+
       - name: 📝 Create security summary
         run: |
           echo "## 🔒 Security Scan Summary" >> $GITHUB_STEP_SUMMARY
@@ -466,7 +466,7 @@ jobs:
           echo "| SAST Scan | ${{ needs.sast-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Security Headers | ${{ needs.security-headers-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| License Scan | ${{ needs.license-scan.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          
+
       - name: 🚨 Fail on critical issues
         if: steps.aggregate.outputs.status == 'critical'
         run: |
