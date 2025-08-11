@@ -1,0 +1,17 @@
+# Pages Directory
+
+This directory contains static pages in Markdown format.
+
+Pages can be used for:
+- About page content
+- Service descriptions
+- Legal pages (privacy policy, terms of service)
+- Any other static content
+
+Each page should have frontmatter with:
+- title
+- description
+- date (optional)
+- seo metadata
+
+The build process will automatically process these files for static page generation.

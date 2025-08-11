@@ -1,0 +1,12 @@
+# Public Assets Directory
+
+This directory contains static assets that will be served directly:
+
+- favicon.ico
+- robots.txt (generated during build)
+- sitemap.xml (generated during build)
+- images/
+- icons/
+- manifest.json (for PWA support)
+
+Static assets in this directory are served from the root path of the site.

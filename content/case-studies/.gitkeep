@@ -1,0 +1,21 @@
+# Case Studies Directory
+
+This directory contains case studies in Markdown format.
+
+Each case study should have frontmatter with:
+- title
+- description
+- date
+- author
+- tags
+- featured (boolean)
+- client
+- industry
+- challenge
+- solution
+- timeline
+- technologies (array)
+- results (array of metric/value objects)
+- seo metadata
+
+The build process will automatically create sample content if this directory is empty.

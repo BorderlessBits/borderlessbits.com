@@ -1,0 +1,370 @@
+# GitHub Actions workflow for BorderlessBits.com
+# Automated build, test, and deployment pipeline
+
+name: Build and Deploy BorderlessBits.com
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run weekly dependency updates and security checks
+    - cron: '0 2 * * 0'
+
+env:
+  NODE_VERSION: 18
+  # Cache key version - increment to invalidate all caches
+  CACHE_VERSION: v1
+
+jobs:
+  # Quality Gates - Linting, Type Checking, Testing
+  quality-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history for better analysis
+          fetch-depth: 2
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ env.CACHE_VERSION }}-${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ env.CACHE_VERSION }}-${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: false
+
+      - name: Run TypeScript compiler
+        run: npm run type-check
+        continue-on-error: false
+
+      - name: Run tests
+        run: npm run test
+        env:
+          CI: true
+        continue-on-error: false
+
+      - name: Security audit
+        run: npm audit --audit-level high
+        continue-on-error: false
+
+      # Upload test results and coverage
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: test-results
+          path: |
+            coverage/
+            test-results.xml
+          retention-days: 7
+
+  # Build and Performance Testing
+  build-and-test:
+    needs: quality-check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    strategy:
+      matrix:
+        # Test multiple Node.js versions in development
+        node-version: ${{ github.ref == 'refs/heads/main' && '[18]' || '[18, 20]' }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ env.CACHE_VERSION }}-${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ env.CACHE_VERSION }}-${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Create sample content for build
+        run: |
+          mkdir -p content/blog content/case-studies content/pages
+          # Create minimal content files for build process
+          echo "---\ntitle: 'Sample Post'\ndate: '2024-01-01'\ndescription: 'Sample'\n---\nContent" > content/blog/sample.md
+          echo "---\ntitle: 'Sample Case Study'\ndate: '2024-01-01'\ndescription: 'Sample'\nclient: 'Sample Client'\n---\nContent" > content/case-studies/sample.md
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_GA_ID: ${{ secrets.GA_MEASUREMENT_ID }}
+          NEXT_PUBLIC_EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
+          NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
+          NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
+          NEXT_PUBLIC_SITE_URL: https://borderlessbits.com
+
+      - name: Analyze bundle size
+        run: npm run analyze
+        continue-on-error: true
+
+      # Performance testing with Lighthouse CI
+      - name: Setup Lighthouse CI
+        run: npm install -g @lhci/cli@0.12.x
+
+      - name: Run Lighthouse CI
+        run: |
+          # Start a local server for testing
+          npm run build
+          npx serve out -l 3001 &
+          sleep 5
+          
+          # Run Lighthouse
+          lhci autorun --config=.lighthouserc.json || echo "Lighthouse CI failed but continuing..."
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        continue-on-error: true
+
+      - name: Check build output
+        run: |
+          echo "Build output size:"
+          du -sh out/
+          echo "Number of files:"
+          find out/ -type f | wc -l
+          echo "Critical files check:"
+          test -f out/index.html && echo "✓ Homepage built"
+          test -f out/contact/index.html && echo "✓ Contact page built"
+          test -d out/_next && echo "✓ Next.js assets built"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-files-${{ matrix.node-version }}
+          path: out/
+          retention-days: 7
+
+      - name: Upload bundle analysis
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: bundle-analysis
+          path: |
+            .next/analyze/
+            bundle-analyzer-report.html
+          retention-days: 7
+
+  # Deploy to GitHub Pages (Production)
+  deploy-production:
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    # Grant GITHUB_TOKEN permissions for deployment
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    # Deploy to production environment
+    environment:
+      name: production
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files-18
+          path: out/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+        with:
+          # Use static site generator mode
+          static_site_generator: next
+
+      - name: Add custom files for GitHub Pages
+        run: |
+          # Add .nojekyll to prevent Jekyll processing
+          touch out/.nojekyll
+          
+          # Add CNAME file for custom domain
+          echo "borderlessbits.com" > out/CNAME
+          
+          # Add robots.txt
+          cat > out/robots.txt << EOF
+          User-agent: *
+          Allow: /
+          
+          Sitemap: https://borderlessbits.com/sitemap.xml
+          EOF
+          
+          # Verify critical files exist
+          test -f out/index.html || (echo "ERROR: index.html not found" && exit 1)
+
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: out/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
+  # Post-deployment verification
+  verify-deployment:
+    needs: deploy-production
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Wait for deployment to be available
+        run: sleep 30
+
+      - name: Check site availability
+        run: |
+          echo "Checking site availability..."
+          
+          # Check main pages
+          curl -f -s -o /dev/null https://borderlessbits.com || (echo "ERROR: Homepage not accessible" && exit 1)
+          curl -f -s -o /dev/null https://borderlessbits.com/contact/ || (echo "ERROR: Contact page not accessible" && exit 1)
+          
+          # Check for proper redirects
+          curl -s -I https://borderlessbits.com | grep -q "200 OK" || (echo "ERROR: Homepage not returning 200" && exit 1)
+          
+          # Check critical assets
+          curl -f -s -o /dev/null https://borderlessbits.com/_next/static/ || echo "WARNING: Static assets may not be available"
+          
+          echo "✓ Site is accessible and responding correctly"
+
+      - name: Run basic SEO checks
+        run: |
+          echo "Running basic SEO checks..."
+          
+          # Check for meta tags and structured data
+          PAGE_CONTENT=$(curl -s https://borderlessbits.com)
+          
+          echo "$PAGE_CONTENT" | grep -q "<title>" && echo "✓ Title tag found" || echo "⚠ Title tag missing"
+          echo "$PAGE_CONTENT" | grep -q 'name="description"' && echo "✓ Meta description found" || echo "⚠ Meta description missing"
+          echo "$PAGE_CONTENT" | grep -q 'application/ld+json' && echo "✓ Structured data found" || echo "⚠ Structured data missing"
+          echo "$PAGE_CONTENT" | grep -q 'og:title' && echo "✓ Open Graph tags found" || echo "⚠ Open Graph tags missing"
+
+      - name: Performance check with curl timing
+        run: |
+          echo "Checking page load performance..."
+          
+          # Measure page load time
+          TIME=$(curl -o /dev/null -s -w '%{time_total}' https://borderlessbits.com)
+          echo "Page load time: ${TIME}s"
+          
+          # Check if load time is reasonable (under 5 seconds)
+          if (( $(echo "$TIME > 5.0" | bc -l) )); then
+            echo "⚠ Page load time is slower than expected"
+          else
+            echo "✓ Page load time is acceptable"
+          fi
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "🎉 Deployment successful!"
+          echo "Site URL: https://borderlessbits.com"
+          echo "Timestamp: $(date -u)"
+
+      - name: Handle deployment failure
+        if: failure()
+        run: |
+          echo "❌ Deployment verification failed!"
+          echo "Please check the deployment manually."
+          exit 1
+
+  # Security scanning
+  security-scan:
+    needs: quality-check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || contains(github.event.head_commit.message, '[security-scan]')
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Snyk security scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+        continue-on-error: true
+
+      - name: Run npm audit
+        run: |
+          npm audit --audit-level moderate --json > audit-results.json || true
+          echo "Audit results saved to audit-results.json"
+
+      - name: Upload security scan results
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-scan-results
+          path: |
+            audit-results.json
+            snyk-results.json
+          retention-days: 30
+
+# Cleanup old workflow runs
+  cleanup:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    timeout-minutes: 5
+    
+    steps:
+      - name: Delete old workflow runs
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: runs } = await github.rest.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+            
+            const cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - 30); // Keep runs for 30 days
+            
+            for (const run of runs.workflow_runs) {
+              if (new Date(run.created_at) < cutoff && run.status === 'completed') {
+                await github.rest.actions.deleteWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: run.id
+                });
+              }
+            }

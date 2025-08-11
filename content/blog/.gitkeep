@@ -1,0 +1,14 @@
+# Blog Posts Directory
+
+This directory contains blog posts in Markdown format.
+
+Each post should have frontmatter with:
+- title
+- description  
+- date
+- author
+- tags
+- featured (boolean)
+- seo metadata
+
+The build process will automatically create sample content if this directory is empty.

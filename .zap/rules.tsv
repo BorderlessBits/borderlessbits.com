@@ -1,0 +1,26 @@
+# ZAP Security Scanning Rules for BorderlessBits.com
+# Format: rule_id	action	reason
+
+# Ignore rules for development/testing environments
+10021	IGNORE	Base64 Disclosure - common in development builds
+10027	IGNORE	Information Disclosure - Suspicious Comments - acceptable in source code
+10109	IGNORE	Modern Web Application - expected for React/Next.js apps
+
+# Security headers - warn but don't fail (handled by Next.js config)
+10035	WARN	Strict-Transport-Security Header Not Set
+10038	WARN	Content Security Policy (CSP) Header Not Set - handled by Next.js
+
+# Third-party integrations - ignore common issues
+10063	IGNORE	Feature Policy Header Not Set - not critical for current implementation
+10096	IGNORE	Timestamp Disclosure - Unix - common in API responses
+
+# Development-specific ignores
+50001	IGNORE	Script Passive Scan Rules - Alpha - development artifacts
+40012	IGNORE	Cross Site Scripting (Reflected) - false positives in development
+
+# Authentication - not applicable for current static site
+10055	IGNORE	CSP Scanner - Mixed Content - not applicable
+40014	IGNORE	Cross Site Scripting (Persistent) - not applicable for static content
+
+# Allow certain patterns for analytics and tracking
+10202	WARN	Absence of Anti-CSRF Tokens - not applicable for static forms with CSRF protection

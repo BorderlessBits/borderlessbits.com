@@ -1,0 +1,393 @@
+name: 🚀 Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Force deployment even if checks fail'
+        required: false
+        default: false
+        type: boolean
+
+# Prevent concurrent deployments
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '18'
+  DEPLOYMENT_TIMEOUT: 300
+  HEALTH_CHECK_TIMEOUT: 180
+
+jobs:
+  # ==========================================
+  # PRE-DEPLOYMENT VALIDATION
+  # ==========================================
+  
+  pre-deployment:
+    name: 🔍 Pre-Deployment Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    outputs:
+      should_deploy: ${{ steps.validation.outputs.should_deploy }}
+      build_hash: ${{ steps.build.outputs.hash }}
+      
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: ⚡ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: 📦 Install dependencies
+        run: npm ci --prefer-offline --no-audit
+        
+      - name: 🧪 Run critical tests
+        run: npm run test -- --selectProjects=critical
+        continue-on-error: ${{ github.event.inputs.force_deploy == 'true' }}
+        
+      - name: 🔍 Security scan
+        run: npm audit --audit-level high
+        continue-on-error: ${{ github.event.inputs.force_deploy == 'true' }}
+        
+      - name: 🏗️ Production build
+        id: build
+        run: |
+          npm run build
+          echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_SITE_URL: https://borderlessbits.com
+          NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.GA_MEASUREMENT_ID }}
+          NEXT_PUBLIC_EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
+          NEXT_PUBLIC_EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
+          NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
+          
+      - name: 📊 Bundle size check
+        run: |
+          if [ -f ".next/analyze/bundle-sizes.json" ]; then
+            BUNDLE_SIZE=$(cat .next/analyze/bundle-sizes.json | jq -r '.total')
+            if [ "$BUNDLE_SIZE" -gt 2048000 ]; then
+              echo "⚠️ Bundle size exceeds 2MB limit: ${BUNDLE_SIZE} bytes"
+              exit 1
+            fi
+          fi
+          
+      - name: ✅ Validation result
+        id: validation
+        run: |
+          if [ "${{ job.status }}" == "success" ] || [ "${{ github.event.inputs.force_deploy }}" == "true" ]; then
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+            echo "✅ Pre-deployment validation passed"
+          else
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+            echo "❌ Pre-deployment validation failed"
+          fi
+          
+      - name: 📦 Upload build artifacts
+        if: steps.validation.outputs.should_deploy == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-build-${{ steps.build.outputs.hash }}
+          path: |
+            out/
+            .next/
+          retention-days: 30
+
+  # ==========================================
+  # DEPLOY TO GITHUB PAGES (PRIMARY)
+  # ==========================================
+  
+  deploy-github-pages:
+    name: 🌐 Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [pre-deployment]
+    if: needs.pre-deployment.outputs.should_deploy == 'true'
+    
+    # Required for GitHub Pages deployment
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+      
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      
+    steps:
+      - name: 📥 Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: production-build-${{ needs.pre-deployment.outputs.build_hash }}
+          
+      - name: ⚙️ Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: 📤 Upload to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+          
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+      - name: 📝 Deployment summary
+        run: |
+          echo "## 🚀 GitHub Pages Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL**: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ needs.pre-deployment.outputs.build_hash }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ✅ Successful" >> $GITHUB_STEP_SUMMARY
+          echo "- **Time**: $(date -u)" >> $GITHUB_STEP_SUMMARY
+
+  # ==========================================
+  # DEPLOY TO NETLIFY (BACKUP)
+  # ==========================================
+  
+  deploy-netlify-backup:
+    name: 🔄 Deploy to Netlify Backup
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [pre-deployment, deploy-github-pages]
+    if: always() && needs.pre-deployment.outputs.should_deploy == 'true'
+    
+    steps:
+      - name: 📥 Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: production-build-${{ needs.pre-deployment.outputs.build_hash }}
+          
+      - name: 🚀 Deploy to Netlify
+        uses: nwtgck/actions-netlify@v2.1
+        with:
+          publish-dir: './out'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Production deployment ${{ needs.pre-deployment.outputs.build_hash }}"
+          enable-pull-request-comment: false
+          enable-commit-comment: false
+          overwrites-pull-request-comment: false
+          alias: backup-${{ needs.pre-deployment.outputs.build_hash }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          
+      - name: 📝 Backup deployment summary
+        run: |
+          echo "## 🔄 Netlify Backup Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL**: https://backup.borderlessbits.com" >> $GITHUB_STEP_SUMMARY
+          echo "- **Alias**: backup-${{ needs.pre-deployment.outputs.build_hash }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ✅ Backup Ready" >> $GITHUB_STEP_SUMMARY
+
+  # ==========================================
+  # POST-DEPLOYMENT VALIDATION
+  # ==========================================
+  
+  post-deployment-validation:
+    name: ✅ Post-Deployment Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [pre-deployment, deploy-github-pages, deploy-netlify-backup]
+    if: always() && needs.pre-deployment.outputs.should_deploy == 'true'
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: ⚡ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: 📦 Install dependencies
+        run: npm ci --prefer-offline --no-audit
+        
+      - name: 🏥 Health check - Primary site
+        id: health_primary
+        run: |
+          MAX_ATTEMPTS=10
+          ATTEMPT=1
+          
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            echo "Health check attempt $ATTEMPT of $MAX_ATTEMPTS"
+            
+            if curl -f -s -o /dev/null -w "%{http_code}" https://borderlessbits.com | grep -q "200"; then
+              echo "✅ Primary site is healthy"
+              echo "status=success" >> $GITHUB_OUTPUT
+              break
+            fi
+            
+            if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
+              echo "❌ Primary site health check failed after $MAX_ATTEMPTS attempts"
+              echo "status=failed" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+            
+            sleep 30
+            ATTEMPT=$((ATTEMPT + 1))
+          done
+          
+      - name: 🏥 Health check - Backup site
+        id: health_backup
+        continue-on-error: true
+        run: |
+          if curl -f -s -o /dev/null -w "%{http_code}" https://backup.borderlessbits.com | grep -q "200"; then
+            echo "✅ Backup site is healthy"
+            echo "status=success" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ Backup site health check failed"
+            echo "status=failed" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: 💡 Performance validation
+        run: |
+          npm install -g @lhci/cli@0.12.x
+          
+          # Create temporary Lighthouse config for production
+          cat > lighthouserc.prod.json << EOF
+          {
+            "ci": {
+              "collect": {
+                "url": ["https://borderlessbits.com", "https://borderlessbits.com/contact"],
+                "numberOfRuns": 1
+              },
+              "assert": {
+                "assertions": {
+                  "categories:performance": ["error", {"minScore": 0.85}],
+                  "categories:accessibility": ["error", {"minScore": 0.95}],
+                  "categories:best-practices": ["error", {"minScore": 0.90}],
+                  "categories:seo": ["error", {"minScore": 0.95}]
+                }
+              },
+              "upload": {
+                "target": "temporary-public-storage"
+              }
+            }
+          }
+          EOF
+          
+          lhci autorun --config=lighthouserc.prod.json
+          
+      - name: 🔍 SEO validation
+        run: |
+          # Check sitemap accessibility
+          curl -f https://borderlessbits.com/sitemap.xml > /dev/null
+          
+          # Check robots.txt
+          curl -f https://borderlessbits.com/robots.txt > /dev/null
+          
+          echo "✅ SEO assets are accessible"
+          
+      - name: 📊 Deployment status summary
+        run: |
+          echo "## 📊 Deployment Status Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Service | Status | URL |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|--------|-----|" >> $GITHUB_STEP_SUMMARY
+          echo "| GitHub Pages | ${{ steps.health_primary.outputs.status == 'success' && '✅ Healthy' || '❌ Unhealthy' }} | https://borderlessbits.com |" >> $GITHUB_STEP_SUMMARY
+          echo "| Netlify Backup | ${{ steps.health_backup.outputs.status == 'success' && '✅ Healthy' || '⚠️ Issues' }} | https://backup.borderlessbits.com |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Deployment Hash**: ${{ needs.pre-deployment.outputs.build_hash }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Deployment Time**: $(date -u)" >> $GITHUB_STEP_SUMMARY
+
+  # ==========================================
+  # ROLLBACK ON FAILURE
+  # ==========================================
+  
+  rollback:
+    name: 🔄 Rollback on Failure
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [pre-deployment, deploy-github-pages, post-deployment-validation]
+    if: failure() && needs.pre-deployment.outputs.should_deploy == 'true'
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: 🔄 Get previous successful deployment
+        id: previous
+        run: |
+          # Get the last successful deployment commit
+          PREVIOUS_COMMIT=$(git log --pretty=format:"%H" --grep="Deploy to production" -n 2 | tail -n 1)
+          if [ -z "$PREVIOUS_COMMIT" ]; then
+            PREVIOUS_COMMIT=$(git rev-parse HEAD~1)
+          fi
+          echo "commit=$PREVIOUS_COMMIT" >> $GITHUB_OUTPUT
+          echo "Previous successful commit: $PREVIOUS_COMMIT"
+          
+      - name: ⚡ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: 🔄 Build previous version
+        run: |
+          git checkout ${{ steps.previous.outputs.commit }}
+          npm ci --prefer-offline --no-audit
+          npm run build
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_SITE_URL: https://borderlessbits.com
+          NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.GA_MEASUREMENT_ID }}
+          
+      - name: 🚀 Deploy rollback
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages
+          
+      - name: 📝 Rollback summary
+        run: |
+          echo "## 🔄 Automatic Rollback Executed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Reason**: Deployment validation failed" >> $GITHUB_STEP_SUMMARY
+          echo "- **Rolled back to**: ${{ steps.previous.outputs.commit }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Time**: $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🚨 **Action Required**: Review failed deployment and fix issues before next deployment attempt."
+
+  # ==========================================
+  # NOTIFICATIONS
+  # ==========================================
+  
+  notify:
+    name: 📢 Notifications
+    runs-on: ubuntu-latest
+    needs: [pre-deployment, deploy-github-pages, deploy-netlify-backup, post-deployment-validation]
+    if: always() && needs.pre-deployment.outputs.should_deploy == 'true'
+    
+    steps:
+      - name: 📧 Success notification
+        if: needs.post-deployment-validation.result == 'success'
+        run: |
+          echo "✅ Production deployment successful!"
+          echo "Site: https://borderlessbits.com"
+          echo "Commit: ${{ needs.pre-deployment.outputs.build_hash }}"
+          
+          # Here you can add email notifications, Slack webhooks, etc.
+          # curl -X POST -H 'Content-type: application/json' \
+          #   --data '{"text":"✅ BorderlessBits.com deployed successfully!"}' \
+          #   ${{ secrets.SLACK_WEBHOOK_URL }}
+          
+      - name: 📧 Failure notification
+        if: failure()
+        run: |
+          echo "❌ Production deployment failed!"
+          echo "Check the workflow logs for details."
+          echo "Automatic rollback may have been triggered."
+          
+          # Here you can add failure notifications
+          # curl -X POST -H 'Content-type: application/json' \
+          #   --data '{"text":"❌ BorderlessBits.com deployment failed!"}' \
+          #   ${{ secrets.SLACK_WEBHOOK_URL }}

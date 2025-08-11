@@ -1,0 +1,188 @@
+# BorderlessBits.com - Docker Compose for Local Development
+version: '3.8'
+
+services:
+  # ==========================================
+  # Main Application - Development Mode
+  # ==========================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: borderlessbits-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      # Hot reloading support
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./content:/app/content
+      - ./styles:/app/styles
+      - ./next.config.js:/app/next.config.js
+      - ./tailwind.config.js:/app/tailwind.config.js
+      - ./tsconfig.json:/app/tsconfig.json
+      # Exclude node_modules from volume mount for performance
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_SITE_URL=http://localhost:3000
+      - NEXT_PUBLIC_GA_MEASUREMENT_ID=${GA_MEASUREMENT_ID:-}
+      - NEXT_PUBLIC_EMAILJS_SERVICE_ID=${EMAILJS_SERVICE_ID:-}
+      - NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=${EMAILJS_TEMPLATE_ID:-}
+      - NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=${EMAILJS_PUBLIC_KEY:-}
+      - CHOKIDAR_USEPOLLING=true  # For file watching on Windows
+      - WATCHPACK_POLLING=true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - borderlessbits-network
+
+  # ==========================================
+  # Production Preview
+  # ==========================================
+  app-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: borderlessbits-prod-preview
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    profiles:
+      - production
+    networks:
+      - borderlessbits-network
+
+  # ==========================================
+  # Testing Environment
+  # ==========================================
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ci
+    container_name: borderlessbits-test
+    volumes:
+      - ./src:/app/src
+      - ./content:/app/content
+      - ./__tests__:/app/__tests__
+      - ./jest.config.js:/app/jest.config.js
+      - ./jest.setup.js:/app/jest.setup.js
+      - /app/node_modules
+    environment:
+      - NODE_ENV=test
+      - CI=true
+    command: npm run test:watch
+    profiles:
+      - testing
+    networks:
+      - borderlessbits-network
+
+  # ==========================================
+  # Lighthouse Performance Testing
+  # ==========================================
+  lighthouse:
+    image: femtopixel/google-lighthouse:latest
+    container_name: borderlessbits-lighthouse
+    volumes:
+      - ./lighthouse-reports:/home/chrome/reports
+    command: >
+      lighthouse
+      --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage"
+      --output=html
+      --output-path=/home/chrome/reports/report.html
+      --view
+      http://app:3000
+    depends_on:
+      - app
+    profiles:
+      - performance
+    networks:
+      - borderlessbits-network
+
+  # ==========================================
+  # E2E Testing with Playwright
+  # ==========================================
+  playwright:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.playwright
+    container_name: borderlessbits-e2e
+    volumes:
+      - ./tests:/app/tests
+      - ./playwright.config.ts:/app/playwright.config.ts
+      - ./test-results:/app/test-results
+      - ./playwright-report:/app/playwright-report
+    environment:
+      - CI=true
+      - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+      - PLAYWRIGHT_BASE_URL=http://app:3000
+    depends_on:
+      - app
+    profiles:
+      - e2e
+    networks:
+      - borderlessbits-network
+
+  # ==========================================
+  # Nginx Reverse Proxy (for advanced testing)
+  # ==========================================
+  nginx:
+    image: nginx:alpine
+    container_name: borderlessbits-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx-dev.conf:/etc/nginx/nginx.conf
+      - ./docker/ssl:/etc/nginx/ssl
+    depends_on:
+      - app
+    profiles:
+      - nginx
+    networks:
+      - borderlessbits-network
+
+  # ==========================================
+  # Development Tools Container
+  # ==========================================
+  tools:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.tools
+    container_name: borderlessbits-tools
+    volumes:
+      - .:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /workspace
+    profiles:
+      - tools
+    networks:
+      - borderlessbits-network
+
+# ==========================================
+# Networks
+# ==========================================
+networks:
+  borderlessbits-network:
+    driver: bridge
+    name: borderlessbits-network
+
+# ==========================================
+# Volumes for persistent data
+# ==========================================
+volumes:
+  node_modules:
+    name: borderlessbits-node-modules
+  next_cache:
+    name: borderlessbits-next-cache
