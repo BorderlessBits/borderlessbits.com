@@ -150,7 +150,7 @@ jobs:
         run: npm ci --prefer-offline --no-audit
 
       - name: 🧪 Run tests with coverage
-        run: npm run test:coverage
+        run: npm run test:ci
         continue-on-error: true
 
       - name: 📊 Upload coverage to Codecov
