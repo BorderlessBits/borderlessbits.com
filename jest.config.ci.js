@@ -104,10 +104,12 @@ const ciJestConfig = {
   // Error handling
   errorOnDeprecated: true,
   
-  // Transform configuration
+  // Transform configuration with explicit Babel config
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { 
-      presets: ['next/babel']
+      presets: ['next/babel'],
+      configFile: '<rootDir>/babel.config.js',
+      envName: 'test',
     }],
   },
   
