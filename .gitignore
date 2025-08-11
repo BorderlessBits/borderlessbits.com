@@ -95,3 +95,6 @@ bundle-analyzer-report.html
 
 # Local development
 .local/
+/test-results
+/playwright-report/data
+/tests/visual
