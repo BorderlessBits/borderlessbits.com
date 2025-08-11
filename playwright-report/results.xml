@@ -1,0 +1,1234 @@
+<testsuites id="" name="" tests="294" failures="0" skipped="294" errors="0" time="0.9550389999999999">
+<testsuite name="e2e\contact.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="chromium" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Contact Page › should load successfully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact form" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate required fields" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate email format" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle form submission" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact information" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should have proper accessibility" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle spam protection gracefully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should be mobile-friendly" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should load without errors" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\homepage.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="chromium" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Homepage › should load successfully" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display main navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display hero section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have working contact CTA" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display services section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have proper meta tags for SEO" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have accessible navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should load without JavaScript errors" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance\lighthouse.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="chromium" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on homepage" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on contact page" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have good Core Web Vitals" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should load resources efficiently" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have proper caching headers" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize render-blocking resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have optimized images" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should preload critical resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize layout shifts" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="visual\visual-regression.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="chromium" tests="14" failures="0" skipped="14" time="0" errors="0">
+<testcase name="Visual Regression Tests › homepage desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage tablet layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › navigation component states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › form component visual states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › hero section component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › footer component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › responsive breakpoints" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › dark mode support (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › loading states (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › error states (404 page)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › accessibility focus states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\contact.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="firefox" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Contact Page › should load successfully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact form" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate required fields" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate email format" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle form submission" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact information" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should have proper accessibility" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle spam protection gracefully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should be mobile-friendly" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should load without errors" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\homepage.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="firefox" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Homepage › should load successfully" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display main navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display hero section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have working contact CTA" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display services section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have proper meta tags for SEO" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have accessible navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should load without JavaScript errors" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance\lighthouse.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="firefox" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on homepage" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on contact page" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have good Core Web Vitals" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should load resources efficiently" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have proper caching headers" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize render-blocking resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have optimized images" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should preload critical resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize layout shifts" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="visual\visual-regression.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="firefox" tests="14" failures="0" skipped="14" time="0" errors="0">
+<testcase name="Visual Regression Tests › homepage desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage tablet layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › navigation component states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › form component visual states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › hero section component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › footer component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › responsive breakpoints" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › dark mode support (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › loading states (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › error states (404 page)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › accessibility focus states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\contact.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="webkit" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Contact Page › should load successfully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact form" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate required fields" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate email format" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle form submission" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact information" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should have proper accessibility" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle spam protection gracefully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should be mobile-friendly" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should load without errors" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\homepage.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="webkit" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Homepage › should load successfully" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display main navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display hero section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have working contact CTA" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display services section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have proper meta tags for SEO" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have accessible navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should load without JavaScript errors" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance\lighthouse.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="webkit" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on homepage" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on contact page" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have good Core Web Vitals" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should load resources efficiently" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have proper caching headers" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize render-blocking resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have optimized images" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should preload critical resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize layout shifts" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="visual\visual-regression.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="webkit" tests="14" failures="0" skipped="14" time="0" errors="0">
+<testcase name="Visual Regression Tests › homepage desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage tablet layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › navigation component states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › form component visual states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › hero section component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › footer component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › responsive breakpoints" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › dark mode support (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › loading states (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › error states (404 page)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › accessibility focus states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\contact.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Mobile Chrome" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Contact Page › should load successfully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact form" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate required fields" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate email format" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle form submission" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact information" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should have proper accessibility" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle spam protection gracefully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should be mobile-friendly" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should load without errors" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\homepage.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Mobile Chrome" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Homepage › should load successfully" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display main navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display hero section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have working contact CTA" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display services section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have proper meta tags for SEO" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have accessible navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should load without JavaScript errors" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance\lighthouse.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Mobile Chrome" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on homepage" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on contact page" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have good Core Web Vitals" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should load resources efficiently" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have proper caching headers" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize render-blocking resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have optimized images" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should preload critical resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize layout shifts" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="visual\visual-regression.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Mobile Chrome" tests="14" failures="0" skipped="14" time="0" errors="0">
+<testcase name="Visual Regression Tests › homepage desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage tablet layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › navigation component states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › form component visual states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › hero section component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › footer component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › responsive breakpoints" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › dark mode support (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › loading states (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › error states (404 page)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › accessibility focus states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\contact.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Mobile Safari" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Contact Page › should load successfully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact form" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate required fields" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate email format" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle form submission" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact information" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should have proper accessibility" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle spam protection gracefully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should be mobile-friendly" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should load without errors" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\homepage.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Mobile Safari" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Homepage › should load successfully" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display main navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display hero section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have working contact CTA" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display services section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have proper meta tags for SEO" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have accessible navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should load without JavaScript errors" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance\lighthouse.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Mobile Safari" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on homepage" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on contact page" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have good Core Web Vitals" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should load resources efficiently" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have proper caching headers" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize render-blocking resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have optimized images" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should preload critical resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize layout shifts" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="visual\visual-regression.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Mobile Safari" tests="14" failures="0" skipped="14" time="0" errors="0">
+<testcase name="Visual Regression Tests › homepage desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage tablet layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › navigation component states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › form component visual states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › hero section component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › footer component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › responsive breakpoints" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › dark mode support (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › loading states (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › error states (404 page)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › accessibility focus states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\contact.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Microsoft Edge" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Contact Page › should load successfully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact form" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate required fields" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate email format" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle form submission" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact information" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should have proper accessibility" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle spam protection gracefully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should be mobile-friendly" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should load without errors" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\homepage.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Microsoft Edge" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Homepage › should load successfully" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display main navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display hero section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have working contact CTA" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display services section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have proper meta tags for SEO" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have accessible navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should load without JavaScript errors" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance\lighthouse.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Microsoft Edge" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on homepage" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on contact page" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have good Core Web Vitals" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should load resources efficiently" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have proper caching headers" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize render-blocking resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have optimized images" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should preload critical resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize layout shifts" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="visual\visual-regression.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Microsoft Edge" tests="14" failures="0" skipped="14" time="0" errors="0">
+<testcase name="Visual Regression Tests › homepage desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage tablet layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › navigation component states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › form component visual states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › hero section component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › footer component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › responsive breakpoints" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › dark mode support (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › loading states (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › error states (404 page)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › accessibility focus states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\contact.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Google Chrome" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Contact Page › should load successfully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact form" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate required fields" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should validate email format" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle form submission" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should display contact information" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should have proper accessibility" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should handle spam protection gracefully" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should be mobile-friendly" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Page › should load without errors" classname="e2e\contact.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\homepage.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Google Chrome" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Homepage › should load successfully" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display main navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display hero section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have working contact CTA" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should display services section" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have proper meta tags for SEO" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should be responsive on mobile" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should have accessible navigation" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage › should load without JavaScript errors" classname="e2e\homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="performance\lighthouse.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Google Chrome" tests="9" failures="0" skipped="9" time="0" errors="0">
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on homepage" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should meet performance thresholds on contact page" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have good Core Web Vitals" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should load resources efficiently" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have proper caching headers" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize render-blocking resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should have optimized images" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should preload critical resources" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lighthouse Performance Tests › should minimize layout shifts" classname="performance\lighthouse.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="visual\visual-regression.spec.ts" timestamp="2025-08-11T16:29:34.375Z" hostname="Google Chrome" tests="14" failures="0" skipped="14" time="0" errors="0">
+<testcase name="Visual Regression Tests › homepage desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage tablet layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › homepage mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page desktop layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › contact page mobile layout" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › navigation component states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › form component visual states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › hero section component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › footer component" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › responsive breakpoints" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › dark mode support (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › loading states (if implemented)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › error states (404 page)" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Visual Regression Tests › accessibility focus states" classname="visual\visual-regression.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

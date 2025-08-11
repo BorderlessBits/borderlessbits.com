@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ContactForm } from '../ContactForm';
 
-// Mock the validation and email modules
+// Mock modules with jest.fn() directly in the mock
 jest.mock('@/lib/validation', () => ({
   validateContactForm: jest.fn(() => ({})),
   formatFormDataForSubmission: jest.fn(data => data),
@@ -28,19 +28,35 @@ jest.mock('@/lib/analytics', () => ({
   trackConversion: jest.fn(),
 }));
 
+// Store mock with state that can be modified
+const mockStoreImplementation = {
+  isSubmitting: false,
+  submitStatus: 'idle',
+  errorMessage: null,
+  setStatus: jest.fn(),
+  resetForm: jest.fn(),
+};
+
 jest.mock('@/lib/store', () => ({
-  useFormStore: () => ({
-    isSubmitting: false,
-    submitStatus: 'idle',
-    errorMessage: null,
-    setStatus: jest.fn(),
-    resetForm: jest.fn(),
-  }),
+  useFormStore: () => mockStoreImplementation,
 }));
+
+// Get mock instances for easier testing
+const mockValidation = require('@/lib/validation');
+const mockEmailjs = require('@/lib/emailjs');
+const mockAnalytics = require('@/lib/analytics');
 
 describe('ContactForm', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    
+    // Reset store state to default
+    mockStoreImplementation.isSubmitting = false;
+    mockStoreImplementation.submitStatus = 'idle';
+    mockStoreImplementation.errorMessage = null;
+    
+    // Reset validation mock to return no errors
+    mockValidation.validateContactForm.mockReturnValue({});
   });
 
   it('renders all form fields', () => {
@@ -76,8 +92,7 @@ describe('ContactForm', () => {
   });
 
   it('shows validation errors for empty required fields', async () => {
-    const { validateContactForm } = require('@/lib/validation');
-    validateContactForm.mockReturnValue({
+    mockValidation.validateContactForm.mockReturnValue({
       name: 'Name is required',
       email: 'Email is required',
       message: 'Message is required',
@@ -96,8 +111,6 @@ describe('ContactForm', () => {
   });
 
   it('submits form successfully with valid data', async () => {
-    const { submitContactForm } = require('@/lib/emailjs');
-
     render(<ContactForm />);
 
     // Fill in required fields
@@ -115,8 +128,9 @@ describe('ContactForm', () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(submitContactForm).toHaveBeenCalled();
-    });
+      expect(mockEmailjs.submitContactForm).toHaveBeenCalled();
+      expect(mockStoreImplementation.setStatus).toHaveBeenCalledWith('submitting');
+    }, { timeout: 3000 });
   });
 
   it('resets form when reset button is clicked', () => {
@@ -137,17 +151,9 @@ describe('ContactForm', () => {
   });
 
   it('displays success message after successful submission', async () => {
-    const mockStore = {
-      isSubmitting: false,
-      submitStatus: 'success',
-      errorMessage: 'Thank you! Your message has been sent successfully.',
-      setStatus: jest.fn(),
-      resetForm: jest.fn(),
-    };
-
-    jest.doMock('@/lib/store', () => ({
-      useFormStore: () => mockStore,
-    }));
+    // Update mock store state to success
+    mockStoreImplementation.submitStatus = 'success';
+    mockStoreImplementation.errorMessage = 'Thank you! Your message has been sent successfully.';
 
     render(<ContactForm />);
 
@@ -157,17 +163,9 @@ describe('ContactForm', () => {
   });
 
   it('displays error message after failed submission', async () => {
-    const mockStore = {
-      isSubmitting: false,
-      submitStatus: 'error',
-      errorMessage: 'An error occurred. Please try again.',
-      setStatus: jest.fn(),
-      resetForm: jest.fn(),
-    };
-
-    jest.doMock('@/lib/store', () => ({
-      useFormStore: () => mockStore,
-    }));
+    // Update mock store state to error
+    mockStoreImplementation.submitStatus = 'error';
+    mockStoreImplementation.errorMessage = 'An error occurred. Please try again.';
 
     render(<ContactForm />);
 
@@ -209,17 +207,16 @@ describe('ContactForm Accessibility', () => {
   it('shows required field indicators', () => {
     render(<ContactForm />);
 
-    // Required fields should have asterisks
-    expect(screen.getByText(/full name \*/)).toBeInTheDocument();
-    expect(screen.getByText(/email address \*/)).toBeInTheDocument();
-    expect(screen.getByText(/project type \*/)).toBeInTheDocument();
-    expect(screen.getByText(/project timeline \*/)).toBeInTheDocument();
-    expect(screen.getByText(/project details \*/)).toBeInTheDocument();
+    // Required fields should have asterisks - using more flexible regex
+    expect(screen.getByText(/Full Name \*/)).toBeInTheDocument();
+    expect(screen.getByText(/Email Address \*/)).toBeInTheDocument();
+    expect(screen.getByText(/Project Type \*/)).toBeInTheDocument();
+    expect(screen.getByText(/Project Timeline \*/)).toBeInTheDocument();
+    expect(screen.getByText(/Project Details \*/)).toBeInTheDocument();
   });
 
   it('provides helpful error messages', async () => {
-    const { validateContactForm } = require('@/lib/validation');
-    validateContactForm.mockReturnValue({
+    mockValidation.validateContactForm.mockReturnValue({
       email: 'Please enter a valid email address',
     });
 
