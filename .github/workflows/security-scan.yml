@@ -22,7 +22,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: '20'
 
 permissions:
   contents: read
@@ -146,7 +146,7 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}} # Premium license (optional)
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE || '' }} # Premium license (optional)
 
   # ==========================================
   # SAST (STATIC APPLICATION SECURITY TESTING)
@@ -271,7 +271,9 @@ jobs:
         run: npx serve out -l 3000 &
         
       - name: ⏳ Wait for server
-        run: npx wait-on http://localhost:3000 --timeout 60000
+        run: |
+          npm install -g wait-on
+          wait-on http://localhost:3000 --timeout 60000
         
       - name: 🛡️ Security Headers Test
         run: |

@@ -52,7 +52,17 @@
       "Bash(dotnet run:*)",
       "Bash(python:*)",
       "Bash(node:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npm run validate:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm run build:*)",
+      "Bash(NEXT_PUBLIC_SITE_URL=https://borderlessbits.com npm run build)",
+      "Bash(npm run lint)",
+      "Bash(npm test)"
     ],
     "deny": []
   }

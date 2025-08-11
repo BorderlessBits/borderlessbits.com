@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: '20'
   DEPLOYMENT_TIMEOUT: 300
   HEALTH_CHECK_TIMEOUT: 180
 
@@ -48,8 +48,8 @@ jobs:
       - name: 📦 Install dependencies
         run: npm ci --prefer-offline --no-audit
         
-      - name: 🧪 Run critical tests
-        run: npm run test -- --selectProjects=critical
+      - name: 🧪 Run tests
+        run: npm run test
         continue-on-error: ${{ github.event.inputs.force_deploy == 'true' }}
         
       - name: 🔍 Security scan

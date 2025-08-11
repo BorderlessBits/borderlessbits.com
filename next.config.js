@@ -81,10 +81,10 @@ const nextConfig = {
       : 'http://localhost:3000'
   },
   
-  // Experimental features
-  experimental: {
-    optimizeCss: true,
-  }
+  // Experimental features (disabled for compatibility)
+  // experimental: {
+  //   optimizeCss: true,
+  // }
 };
 
 // Bundle analyzer configuration for performance monitoring

@@ -71,7 +71,9 @@
     "lint-staged": "^15.2.0",
     "@next/bundle-analyzer": "^14.0.4",
     "lighthouse": "^11.3.0",
-    "next-sitemap": "^4.2.3"
+    "next-sitemap": "^4.2.3",
+    "@playwright/test": "^1.40.0",
+    "playwright-lighthouse": "^4.0.0"
   },
   "engines": {
     "node": ">=18.0.0",

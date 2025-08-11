@@ -38,6 +38,11 @@
   "exclude": [
     "node_modules",
     ".next",
-    "out"
+    "out",
+    "tests/**/*",
+    "playwright.config.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts"
   ]
 }

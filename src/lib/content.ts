@@ -245,7 +245,7 @@ export async function getAllCaseStudies(): Promise<CaseStudy[]> {
 export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
   const filePath = path.join(CASE_STUDIES_DIR, `${slug}.md`);
   
-  if (!fs.existsExists(filePath)) {
+  if (!fs.existsSync(filePath)) {
     return null;
   }
   
