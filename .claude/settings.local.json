@@ -62,7 +62,11 @@
       "Bash(npm run build:*)",
       "Bash(NEXT_PUBLIC_SITE_URL=https://borderlessbits.com npm run build)",
       "Bash(npm run lint)",
-      "Bash(npm test)"
+      "Bash(npm test)",
+      "Bash(npm ls:*)",
+      "Bash(npm ci:*)",
+      "Bash(npm run lint:*)",
+      "Bash(sed:*)"
     ],
     "deny": []
   }

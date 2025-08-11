@@ -48,7 +48,7 @@ export async function sendContactEmail(
   formData: ContactFormData,
   retryAttempt: number = 1
 ): Promise<EmailSubmissionResult> {
-  const startTime = Date.now();
+  // const startTime = Date.now(); // For future performance tracking
 
   try {
     // Validate configuration
@@ -176,7 +176,7 @@ async function sendAutoReply(formData: ContactFormData): Promise<void> {
 export async function submitNetlifyForm(
   formData: ContactFormData
 ): Promise<EmailSubmissionResult> {
-  const startTime = Date.now();
+  // const startTime = Date.now(); // For future performance tracking
 
   try {
     const sanitizedData = formatFormDataForSubmission(formData);

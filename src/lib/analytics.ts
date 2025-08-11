@@ -116,7 +116,7 @@ export function trackFormSubmission(
     value: success ? 1 : 0,
     custom_parameters: {
       form_type: formType,
-      success: success,
+      success,
       error_message: errorMessage || null,
       timestamp: Date.now(),
     },
@@ -267,7 +267,7 @@ export function trackTiming(
   window.gtag('event', 'timing_complete', {
     event_category: category,
     name: variable,
-    value: value,
+    value,
     event_label: label,
   });
 
@@ -284,8 +284,8 @@ export function trackException(
   if (!isAnalyticsEnabled()) return;
 
   window.gtag('event', 'exception', {
-    description: description,
-    fatal: fatal,
+    description,
+    fatal,
   });
 
   console.log('Exception tracked:', { description, fatal });

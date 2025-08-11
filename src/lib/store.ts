@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { useState, useCallback } from 'react';
-import type { UIStore, PrivacyConsent } from '@/types';
+import { useCallback, useState } from 'react';
+import type { PrivacyConsent, UIStore } from '@/types';
 
 /**
  * UI state store for managing global application state
  */
 export const useUIStore = create<UIStore>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       // Mobile navigation state
       mobileMenuOpen: false,
       toggleMobileMenu: () => {
@@ -110,7 +110,7 @@ interface AnalyticsStore {
 
 export const useAnalyticsStore = create<AnalyticsStore>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       pageViews: 0,
       sessionStart: Date.now(),
       conversionTracked: false,
@@ -134,7 +134,7 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
       },
       
       getSessionDuration: () => {
-        const { sessionStart } = get();
+        const { sessionStart } = _get();
         return Date.now() - sessionStart;
       },
     }),
@@ -170,7 +170,7 @@ interface ContentStore {
 
 export const useContentStore = create<ContentStore>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       searchQuery: '',
       searchResults: null,
       isSearching: false,
@@ -238,7 +238,7 @@ interface PerformanceStore {
 
 export const usePerformanceStore = create<PerformanceStore>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       metrics: {},
       
       addMetric: (path: string, metric: string, value: number) => {
@@ -255,7 +255,7 @@ export const usePerformanceStore = create<PerformanceStore>()(
       },
       
       getAverageMetric: (metric: string) => {
-        const { metrics } = get();
+        const { metrics } = _get();
         const values = Object.values(metrics)
           .map(m => m[metric as keyof typeof m])
           .filter(v => typeof v === 'number' && v > 0);
@@ -265,7 +265,7 @@ export const usePerformanceStore = create<PerformanceStore>()(
       },
       
       getPageMetrics: (path: string) => {
-        const { metrics } = get();
+        const { metrics } = _get();
         return metrics[path] || null;
       },
     }),

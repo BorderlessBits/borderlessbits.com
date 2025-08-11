@@ -4,7 +4,7 @@ import matter from 'gray-matter';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 import remarkGfm from 'remark-gfm';
-import type { Post, CaseStudy, PostMetadata } from '@/types';
+import type { CaseStudy, Post, PostMetadata } from '@/types';
 
 // Content directories
 const CONTENT_DIR = path.join(process.cwd(), 'content');
@@ -250,7 +250,7 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null
   }
   
   const fileContent = fs.readFileSync(filePath, 'utf8');
-  const { data, content } = matter(fileContent);
+  const { data } = matter(fileContent);
   const parsed = await parseMarkdownFile(filePath);
   
   if (!parsed) {
@@ -508,7 +508,3 @@ This project demonstrates our expertise in healthcare technology modernization a
   }
 }
 
-// Helper function to fix typo in getCaseStudyBySlug
-function existsSync(filePath: string): boolean {
-  return fs.existsSync(filePath);
-}
